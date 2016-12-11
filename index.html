@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='UTF-8'/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+	<link rel="stylesheet" href="css/main.css" />
+	<link rel="stylesheet" href="css/pop.css" />
+	
+	
+	<script type="text/javascript" language="javascript" src="js/controller.js"></script>
+	<script type="text/javascript" language="javascript" src="js/main.js"></script>
+	<!--Dados do Mapa !-->
+	<script type="text/javascript" language="javascript" src="map/UFAL.json"></script>
+	
+	<script>
+		
+		function drawWalls(){
+			var ctx = this.canvas.getContext("2d");
+			document.getElementById("inicio").style.display="none";
+			var i=0;
+			
+			while(mapa.paredes[i]){
+				var x0 = mapa.paredes[i].x0;
+				var y0 = mapa.paredes[i].y0;
+				
+				var x1 = mapa.paredes[i].x1;
+				var y1 = mapa.paredes[i].y1;
+				
+				ctx.beginPath();
+				ctx.moveTo(x0,y0);
+				ctx.lineTo(x1,y1);
+				ctx.stroke();
+				
+				i++;
+			}
+		}
+	</script>
+</head>
+
+<body id='body'>
+	<canvas id="canvas" width='1024' height='720' >
+		Seu browser não suporta Canvas :/<br>Tente novamente com o Firefox ou o Google Chrome.
+	</canvas>
+	
+		
+	<div id='zoom-panel'>
+		<div class="btn-zoom" id ="zoomp">
+		</div>
+		<div class="btn-zoom" id="zoomm">
+		</div>
+	</div>
+
+	<div class="conteiner">
+		<div class="popup" id='inicio' style="display:block">
+			<div class="titles">
+				<h1>
+					Bem vindo!
+				</h1>
+				<h2>
+					Escolha seu personagem:
+				</h2>
+			</div>
+			
+				<ul class="opt">
+					<li class="item" onclick="mudar();">
+						<img src="img/p1.jpg" class="itemthumb">
+					</li>
+					<li class="item" onclick="mudar();">
+						<img src="img/p2.jpg" class="itemthumb">
+					</li>
+				</ul>
+				
+			</div>
+			
+			
+			<div class="popup" id='aviso' style="display:none">
+			<div class="titles">
+				<h2>
+					Impossível ir até o local devido a falha de acessibilidade!
+				</h2>
+				<h3>
+					Este lugar fere a lei de acessibilidade xx.xx
+				</h3>
+			</div>
+			
+				<ul class="opt">
+					<li class="item" onclick="mudar();">
+						<img src="img/p1.jpg" class="itemthumb">
+					</li>
+					<li class="item" onclick="mudar();">
+						<img src="img/p2.jpg" class="itemthumb">
+					</li>
+				</ul>
+				
+			</div>
+			
+			<div class="popup" id='debug' style="display:none;z-index:0">
+			<div class="titles">
+				<h2>
+					Janela de depuração:
+				</h2>
+				<h3>
+					Para testar os recursos do jogo
+				</h3>
+			</div>
+			
+				<ul>
+					<li>
+						<button onclick="drawWalls();">Desenhar Paredes</button>
+					</li>
+					<li>
+						<button onclick="alert('Funcionalidade ainda não implementada');">Modo Criação</button>
+					</li>
+				</ul>
+				
+			</div>
+			
+		</div>
+	</div>
+	<script>
+		document.onload = inicializar();
+	</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+O Mapa vai ter:
+
+1 - Controle de zoom -> Inicio em 1x
+3 - Uma imagem de fundo (A representação do mapa)
+4 - Objetos (ou marcações) para colisão.
+5 - Escala - Vai ser influenciada pelo Zoom
+
+1 - +Zoom -> Diminui a escala, ex: antes: 1cm = 100m depois: 1cm = 10m
+
+2 - As dimensões da Imagem(em px) não devem afetar no tamanho de exibição do mapa. Ao invés disso as imagens devem ter anexados a elas as dimensões do local real que representam, assim 
+
+3 - Os objetos no qual o personagem colide terão inicialmente suas dimensões dadas em tamanho real (proporcional ao tamanho real do mapa)
+
+4 - As dimensões serão lidas da imagem do qual o mapa representa
+
+5 - O zoom vai aumentar as dimensões em pixels da imagem mantendo o tamanho real do mapa representado (em metros). Assim diminui a área que será mostrada, aproximando a tela. Lembrar de fazer o zoom ir para o centro.
+
+Questões a serem decididas:
+Haverá uma classe responsável pela view, uma espécie de câmera, que gerenciará estas características? "Mapa" para mim é muito vago.
+Haverá uma classe para o armazenamento de partes do mapa? Esta classe conteria metadados como o tamanho real do mapa, as imagens de fundo e os objetos para colisão. - Esta sim poderia ser a classe mapa - Um mapa conteria outro mapa numa como se fosse um Decorator?

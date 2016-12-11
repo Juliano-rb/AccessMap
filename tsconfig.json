@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "system",
+		"listEmittedFiles": true,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outDir": "js/",
+        "sourceMap": false
+    },
+    "include": [
+        "ts/*"
+    ]
+}

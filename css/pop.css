@@ -1,0 +1,42 @@
+.popup{
+	position:relative;
+	padding:20px;
+	left: -50%;
+	/*border: dotted red 1px;*/
+	width:50vw;
+	height:80vh;
+	border: solid 1px transparent;
+	background: rgba(102, 153, 255, 0.7);
+	box-sizing: border-box;
+	text-align:center;
+	border-radius:20px;
+	
+}
+
+.conteiner{
+	position: absolute;
+	left: 50%;
+}
+
+ul{
+	display: inline-block;
+	list-style-type: none;
+	list-style-position: inside;
+}
+li:active{
+	border:2px black solid;
+}
+li{
+	box-sizing: border-box;
+	background-color:white;
+	padding:10px;
+	margin-left:10px;
+	border-radius:20px;
+  float: left;
+}
+.itemthumb{
+  display: block;
+  box-sizing: border-box;
+  
+  width: 90px;
+}
