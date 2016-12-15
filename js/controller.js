@@ -5,6 +5,7 @@ var Controller = (function () {
         this.aviso = document.getElementById("aviso");
         this.debug = document.getElementById("debug");
         this.view("inicio");
+        this.registerEvents();
     }
     Controller.prototype.view = function (nome) {
         console.log("mudando para tela: " + nome);
@@ -30,6 +31,15 @@ var Controller = (function () {
                 this.debug.style.display = "none";
                 break;
         }
+    };
+    Controller.prototype.registerEvents = function () {
+        window.onresize = this.resizeCanvas;
+    };
+    Controller.prototype.resizeCanvas = function () {
+        console.log("redmensionou");
+        var canvas = document.getElementById("canvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     };
     return Controller;
 }());

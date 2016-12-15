@@ -17,6 +17,7 @@
 		
 		function drawWalls(){
 			var ctx = this.canvas.getContext("2d");
+			ctx.lineWidth=5;
 			document.getElementById("inicio").style.display="none";
 			var i=0;
 			
@@ -34,12 +35,28 @@
 				
 				i++;
 			}
+			i=0;
+			
+			ctx.fillStyle="red";
+			while(mapa.falhas[i]){
+			
+				console.log("desenhando falhas");
+				var x = mapa.falhas[i].x;
+				var y = mapa.falhas[i].y;
+				var width = mapa.falhas[i].width;
+				
+				ctx.beginPath();
+				ctx.fillRect(x,y, width, width);
+				ctx.fill();
+				
+				i++;
+			}
 		}
 	</script>
 </head>
 
 <body id='body'>
-	<canvas id="canvas" width='1024' height='720' >
+	<canvas id="canvas" >
 		Seu browser não suporta Canvas :/<br>Tente novamente com o Firefox ou o Google Chrome.
 	</canvas>
 	
@@ -93,9 +110,9 @@
 					</li>
 				</ul>
 				
-			</div>
-			
-			<div class="popup" id='debug' style="display:none;z-index:0">
+			</div>			
+		</div>
+		<div class="popup" id='debug' style="display:none;z-index:0">
 			<div class="titles">
 				<h2>
 					Janela de depuração:
@@ -114,12 +131,11 @@
 					</li>
 				</ul>
 				
-			</div>
-			
 		</div>
 	</div>
 	<script>
 		document.onload = inicializar();
+		control.resizeCanvas();
 	</script>
 </body>
 </html>

@@ -2,7 +2,7 @@ class Controller{
 	private inicio:HTMLDivElement;
 	private aviso:HTMLDivElement;
 	private debug:HTMLDivElement;
-	
+
 	constructor(){
 		console.log("Inicializando controller");
 		this.inicio = <HTMLDivElement>document.getElementById("inicio");
@@ -10,7 +10,7 @@ class Controller{
 		this.debug = <HTMLDivElement>document.getElementById("debug");
 		
 		this.view("inicio");
-		
+		this.registerEvents();
 		
 	}
 	
@@ -39,5 +39,16 @@ class Controller{
 			  break;
 				
 		}
+	}
+	
+	public registerEvents(){
+		window.onresize = this.resizeCanvas;
+	}
+	
+	public resizeCanvas(){
+		console.log("redmensionou");
+		var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas");
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
 	}
 }
