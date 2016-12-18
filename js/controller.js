@@ -4,6 +4,8 @@ var Controller = (function () {
         this.inicio = document.getElementById("inicio");
         this.aviso = document.getElementById("aviso");
         this.debug = document.getElementById("debug");
+        this.canvasElement = document.getElementById("canvas");
+        this.canvasCtx = this.canvas.getContext("2d");
         this.view("inicio");
         this.registerEvents();
     }
@@ -34,12 +36,45 @@ var Controller = (function () {
     };
     Controller.prototype.registerEvents = function () {
         window.onresize = this.resizeCanvas;
+        document.getElementById("body").addEventListener("keydown", function (evento) {
+            if (evento.keyCode == 39) {
+                mapMgr.drawPosX -= 10;
+                mapMgr.drawMap();
+            }
+            else if (evento.keyCode == 37) {
+                mapMgr.drawPosX += 10;
+                mapMgr.drawMap();
+            }
+            if (evento.keyCode == 38) {
+                mapMgr.drawPosY += 10;
+                mapMgr.drawMap();
+            }
+            else if (evento.keyCode == 40) {
+                mapMgr.drawPosY -= 10;
+                mapMgr.drawMap();
+            }
+        });
     };
     Controller.prototype.resizeCanvas = function () {
         console.log("redmensionou");
         var canvas = document.getElementById("canvas");
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        mapMgr.drawMap();
     };
+    Object.defineProperty(Controller.prototype, "ctx", {
+        get: function () {
+            return this.canvasCtx;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Controller.prototype, "canvas", {
+        get: function () {
+            return this.canvasElement;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Controller;
 }());

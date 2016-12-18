@@ -1,6 +1,8 @@
-var mapa={
-	"UFAL":{
-		"fundo":"UFAL.png",
+var mapa=
+[
+	{
+		"nome":"Terreo",
+		"fundo":"map/UFAL.png",
 		"paredes":
 		[
 			{ "x0":20,"y0":10, "x1":400,"y1":10 },
@@ -15,20 +17,23 @@ var mapa={
 		],
 		"falhas":
 		[
-			{ "x":370, "y":500, "width":20 },
-			{ "x":400, "y":500, "width":10 },
-			{ "x":100, "y":500, "width":30 }
+			{ "x":320, "y":490, "width":50, "height":20 },
+			{ "x":400, "y":450, "width":50, "height":60 },
+			{ "x":20, "y":400, "width":80, "height":30 }
 		],
 		"andares":
 		[
 			{
-				"x":0,
-				"y":0,
-				"nome":"BlocoC",
+				"x":250,
+				"y":250,
+				"subir":true,
+				"nome":"1º andar BlocoC"
 			}
 		]
 	},
-	"BlocoC":{
+	
+	{
+		"nome":"1º andar",
 		"fundo":"BlocoC.png",
 		"paredes":
 		[
@@ -44,4 +49,5 @@ var mapa={
 			{ "x":100, "y":500, "width":30 }
 		]
 	}
-}
+
+]

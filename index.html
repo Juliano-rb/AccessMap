@@ -10,32 +10,13 @@
 	
 	<script type="text/javascript" language="javascript" src="js/controller.js"></script>
 	<script type="text/javascript" language="javascript" src="js/main.js"></script>
+	<script type="text/javascript" language="javascript" src="js/mapMgr.js"></script>
 	<!--Dados do Mapa !-->
 	<script type="text/javascript" language="javascript" src="map/UFAL.json"></script>
 	
 	<script>
 		
-		function drawWalls(){
-			var ctx = this.canvas.getContext("2d");
-			ctx.lineWidth=5;
-			document.getElementById("inicio").style.display="none";
-			var i=0;
-			
-			while(mapa.paredes[i]){
-				var x0 = mapa.paredes[i].x0;
-				var y0 = mapa.paredes[i].y0;
-				
-				var x1 = mapa.paredes[i].x1;
-				var y1 = mapa.paredes[i].y1;
-				
-				ctx.beginPath();
-				ctx.moveTo(x0,y0);
-				ctx.lineTo(x1,y1);
-				ctx.stroke();
-				
-				i++;
-			}
-			i=0;
+			/*i=0;
 			
 			ctx.fillStyle="red";
 			while(mapa.falhas[i]){
@@ -50,8 +31,7 @@
 				ctx.fill();
 				
 				i++;
-			}
-		}
+			}*/
 	</script>
 </head>
 
@@ -62,9 +42,9 @@
 	
 		
 	<div id='zoom-panel'>
-		<div class="btn-zoom" id ="zoomp">
+		<div class="btn-zoom" id ="zoomp" onclick="mapMgr.proportion+=0.1;mapMgr.drawMap();">
 		</div>
-		<div class="btn-zoom" id="zoomm">
+		<div class="btn-zoom" id="zoomm" onclick="mapMgr.proportion-=0.1;mapMgr.drawMap();">
 		</div>
 	</div>
 
@@ -124,7 +104,7 @@
 			
 				<ul>
 					<li>
-						<button onclick="drawWalls();">Desenhar Paredes</button>
+						<button onclick="mapMgr.drawWalls();">Desenhar Paredes</button>
 					</li>
 					<li>
 						<button onclick="alert('Funcionalidade ainda não implementada');">Modo Criação</button>
@@ -135,7 +115,8 @@
 	</div>
 	<script>
 		document.onload = inicializar();
-		control.resizeCanvas();
+		
+	
 	</script>
 </body>
 </html>

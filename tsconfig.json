@@ -6,7 +6,8 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "outDir": "js/",
-        "sourceMap": false
+        "sourceMap": false,
+		"target":"es5"
     },
     "include": [
         "ts/*"
