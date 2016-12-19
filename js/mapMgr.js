@@ -5,8 +5,8 @@ var MapMgr = (function () {
         this.wallColor = "blue";
         this.failColor = "red";
         this.proportion = 1;
-        this.drawPosX = 0;
-        this.drawPosY = 0;
+        this.posX = 0;
+        this.posY = 0;
         this.andarAt = 0;
         this.ctx = this.canvas.getContext("2d");
     }
@@ -24,7 +24,7 @@ var MapMgr = (function () {
     MapMgr.prototype.drawMap = function () {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         console.log("Desenhando imagem de fundo " + this.bgImg.src);
-        this.ctx.drawImage(this.bgImg, this.drawPosX, this.drawPosY, this.bgImg.width * this.proportion, this.bgImg.height * this.proportion);
+        this.ctx.drawImage(this.bgImg, this.posX, this.posY, this.bgImg.width * this.proportion, this.bgImg.height * this.proportion);
         this.drawWalls();
         this.drawFails();
     };
@@ -35,9 +35,15 @@ var MapMgr = (function () {
         this.ctx.lineWidth = this.wallWidth;
         var i = 0;
         while (this.walls[i]) {
+            var relativeStart = this.getRelative([this.walls[i].x0, this.walls[i].y0]);
+            var x0 = relativeStart[0];
+            var y0 = relativeStart[1];
+            var relativeEnd = this.getRelative([this.walls[i].x1, this.walls[i].y1]);
+            var x1 = relativeEnd[0];
+            var y1 = relativeEnd[1];
             this.ctx.beginPath();
-            this.ctx.moveTo(this.walls[i].x0, this.walls[i].y0);
-            this.ctx.lineTo(this.walls[i].x1, this.walls[i].y1);
+            this.ctx.moveTo(x0, y0);
+            this.ctx.lineTo(x1, y1);
             this.ctx.stroke();
             i++;
         }
@@ -52,11 +58,53 @@ var MapMgr = (function () {
         while (this.fails[i]) {
             this.ctx.beginPath();
             var fail = this.fails[i];
-            this.ctx.fillRect(fail.x, fail.y, fail.width, fail.height);
+            var relative = this.getRelative([fail.x, fail.y]);
+            this.ctx.fillRect(relative[0], relative[1], fail.width * this.proportion, fail.height * this.proportion);
             this.ctx.fill();
             i++;
         }
         this.ctx.restore();
+    };
+    MapMgr.prototype.zoomIn = function (percent) {
+        var widthAnt = this.bgImg.width * this.proportion;
+        var heigthAnt = this.bgImg.height * this.proportion;
+        this.proportion += percent;
+        var widthNew = this.bgImg.width * this.proportion;
+        var heigthNew = this.bgImg.height * this.proportion;
+        var toCentLeft = (widthNew - widthAnt) / 2;
+        var toCentUp = (heigthNew - heigthAnt) / 2;
+        this.moveLeft(toCentLeft);
+        this.moveUp(toCentLeft);
+    };
+    MapMgr.prototype.zoomOut = function (percent) {
+        var widthAnt = this.bgImg.width * this.proportion;
+        var heigthAnt = this.bgImg.height * this.proportion;
+        this.proportion -= percent;
+        var widthNew = this.bgImg.width * this.proportion;
+        var heigthNew = this.bgImg.height * this.proportion;
+        var toCentLeft = (widthAnt - widthNew) / 2;
+        var toCentUp = (heigthAnt - heigthNew) / 2;
+        this.moveRight(toCentLeft);
+        this.moveDown(toCentLeft);
+    };
+    MapMgr.prototype.moveRight = function (px) {
+        this.posX += px;
+    };
+    MapMgr.prototype.moveLeft = function (px) {
+        this.posX -= px;
+    };
+    MapMgr.prototype.moveUp = function (px) {
+        this.posY -= px;
+    };
+    MapMgr.prototype.moveDown = function (px) {
+        this.posY += px;
+    };
+    MapMgr.prototype.getRelative = function (coord) {
+        var x = (coord[0] + this.posX) * this.proportion;
+        var y = (coord[1] + this.posY) * this.proportion;
+        var tuple;
+        tuple = [x, y];
+        return tuple;
     };
     Object.defineProperty(MapMgr.prototype, "bg", {
         get: function () {

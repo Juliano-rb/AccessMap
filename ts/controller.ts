@@ -51,24 +51,24 @@ class Controller{
 		
 		//Teclas para movimentar o mapa
 		document.getElementById("body").addEventListener("keydown", function(evento){
-			//
+			//Direita
 			if(evento.keyCode==39){
-				mapMgr.drawPosX-=10;
+				mapMgr.moveLeft(10);
 				mapMgr.drawMap();
 			}
-			//
+			//Esquerda
 			else if(evento.keyCode==37){
-				mapMgr.drawPosX+=10;
+				mapMgr.moveRight(10);
 				mapMgr.drawMap();
 			}
-			//
+			//Cima
 			if(evento.keyCode==38){
-				mapMgr.drawPosY+=10;
+				mapMgr.moveDown(10);
 				mapMgr.drawMap();
 			}
-			//
+			//Baixo
 			else if(evento.keyCode==40){
-				mapMgr.drawPosY-=10;
+				mapMgr.moveUp(10);
 				mapMgr.drawMap();
 			}
 		}

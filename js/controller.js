@@ -38,19 +38,19 @@ var Controller = (function () {
         window.onresize = this.resizeCanvas;
         document.getElementById("body").addEventListener("keydown", function (evento) {
             if (evento.keyCode == 39) {
-                mapMgr.drawPosX -= 10;
+                mapMgr.moveLeft(10);
                 mapMgr.drawMap();
             }
             else if (evento.keyCode == 37) {
-                mapMgr.drawPosX += 10;
+                mapMgr.moveRight(10);
                 mapMgr.drawMap();
             }
             if (evento.keyCode == 38) {
-                mapMgr.drawPosY += 10;
+                mapMgr.moveDown(10);
                 mapMgr.drawMap();
             }
             else if (evento.keyCode == 40) {
-                mapMgr.drawPosY -= 10;
+                mapMgr.moveUp(10);
                 mapMgr.drawMap();
             }
         });
