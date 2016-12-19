@@ -4,3 +4,6 @@ AccessMap é uma aplicação para o mapeamento de falhas de acessibilidade em lo
 @copyright Copyright (c) 2016 Coletivo EIDI
 
 @license - https://github.com/Juliano-rb/AccessMap/blob/master/LICENSE (GNU GENERAL PUBLIC LICENSE) 
+
+
+O estado atual de desenvolvimento(não estável) pode ser acompanhado em: https://juliano-rb.github.io/AccessMap/
