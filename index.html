@@ -11,6 +11,7 @@
 	<script type="text/javascript" language="javascript" src="js/controller.js"></script>
 	<script type="text/javascript" language="javascript" src="js/main.js"></script>
 	<script type="text/javascript" language="javascript" src="js/mapMgr.js"></script>
+	<script type="text/javascript" language="javascript" src="js/creator_mode.js"></script>
 	<!--Dados do Mapa !-->
 	<script type="text/javascript" language="javascript" src="map/UFAL.json"></script>
 	
@@ -36,7 +37,7 @@
 </head>
 
 <body id='body'>
-	<canvas id="canvas" >
+	<canvas id="canvas" onclick="Creator.getCoordinates(event)">
 		Seu browser não suporta Canvas :/<br>Tente novamente com o Firefox ou o Google Chrome.
 	</canvas>
 	
