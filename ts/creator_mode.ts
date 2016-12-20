@@ -1,20 +1,28 @@
 class Creator {
 	static countOfCoordinates: number = 0;
-	static canvas: HTMLElement = document.getElementById("canvas");
+	static canvas: HTMLCanvasElement;
+	static canvasCtx: CanvasRenderingContext2D;
+
+	static inicialize():void {
+		Creator.canvas = <HTMLCanvasElement>document.getElementById("canvas");
+		Creator.canvasCtx = <CanvasRenderingContext2D> Creator.canvas.getContext("2d");
+	}
 	
 	static getCoordinates(e: any): void {
-		public x: number = e.clientX;
-		public y: number = e.clientY;
+		var x: number = e.clientX;
+		var y: number = e.clientY;
 		
-		alert("Coordinates: (x" + Creator.countOfCoordinates + ": " + this.x + ", y" + Creator.countOfCoordinates + ": " + this.y + ")");
+		//alert("Coordinates: (x" + Creator.countOfCoordinates + ": " + x + ", y" + Creator.countOfCoordinates + ": " + y + ")");
+
+		Creator.inicialize();
 		
 		if(Creator.countOfCoordinates > 0 && Creator.countOfCoordinates % 2 != 0) {
-			Creator.canvas.getContext("2d");
-			Creator.canvas.moveTo(0,0);
-			Creator.canvas.lineTo(150,75);
-			Creator.canvas.stroke();
-			
-			Creator.countOfCoordinates++;
+			Creator.canvasCtx.lineTo(x,y);
+			Creator.canvasCtx.stroke();
+		} else {
+			Creator.canvasCtx.moveTo(x,y);
 		}
+
+		Creator.countOfCoordinates++;
 	}
 }
