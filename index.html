@@ -7,35 +7,30 @@
 	<link rel="stylesheet" href="css/main.css" />
 	<link rel="stylesheet" href="css/pop.css" />
 	
+	<!--Barra de Loading pace.js ;) !-->
+	<link rel="stylesheet" href="css/pace.css" />
+	<script type="text/javascript" language="javascript" src="js/pace.min.js"></script>
 	
+	<!--
+		Classes do projeto
+		Outra forma possível de fazer isso seria utilizar módulos no typescript, porém da forma que o projeto se
+		encontra atualmente achamos que uma página estática e sem usar muitos tipos de tecnologias, como um servidor node.js para carregar os módulos do TypeScript, agilizaria o trabalho e o manteria simples
+	!-->
 	<script type="text/javascript" language="javascript" src="js/controller.js"></script>
 	<script type="text/javascript" language="javascript" src="js/main.js"></script>
 	<script type="text/javascript" language="javascript" src="js/mapMgr.js"></script>
 	<script type="text/javascript" language="javascript" src="js/creator_mode.js"></script>
-	<!--Dados do Mapa !-->
-	<script type="text/javascript" language="javascript" src="map/UFAL.json"></script>
 	
-	<script>
-		
-			/*i=0;
-			
-			ctx.fillStyle="red";
-			while(mapa.falhas[i]){
-			
-				console.log("desenhando falhas");
-				var x = mapa.falhas[i].x;
-				var y = mapa.falhas[i].y;
-				var width = mapa.falhas[i].width;
-				
-				ctx.beginPath();
-				ctx.fillRect(x,y, width, width);
-				ctx.fill();
-				
-				i++;
-			}*/
-	</script>
-</head>
+	<!--
+		Dados do Mapa
+		Provavelmente esta solução será substituída em algum ponto futuro por um carregamento de um json utilizando as bibliotecas node.js, o motivo disto ainda não ter sido feito é o mesmo descrito no comentário referente as classes do projeto
+	!-->
+	<script type="text/javascript" language="javascript" src="map/UFAL.json"></script>
 
+</head>
+<!--
+	Em breve a interface principal será refeita para algo mais agradável e maduro ;)
+!-->
 <body id='body'>
 	<canvas id="canvas" onclick="Creator.getCoordinates(event)">
 		Seu browser não suporta Canvas :/<br>Tente novamente com o Firefox ou o Google Chrome.
