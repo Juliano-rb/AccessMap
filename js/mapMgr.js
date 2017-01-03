@@ -1,9 +1,35 @@
+/*
+    Copyright 2016-2017 Coletivo EIDI
+  
+    This file is part of AccessMap, that is a software for mapping accessibility failures in public places.
+  
+    AccessMap is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+   
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with AccessMap.
+    If not, see <http://www.gnu.org/licenses/>.
+   
+
+    Contact: rocha.juliano.b@gmail.com and silvio.santos@arapiraca.ufal.br
+    This project and its developers are part of the 'Coletivo Eidi' group <http://sites.google.com/site/eidicoletivo/>.
+*/
 var MapMgr = (function () {
+    //Eu passo o contexto do canvas para o proprio mapamgr desenhar nele
+    //Obs: quando uso private,public ou protected antes de um parametro, ele se torna atributo da classe automaticamente
     function MapMgr(canvas) {
         this.canvas = canvas;
         this.wallWidth = 2;
         this.wallColor = "blue";
         this.failColor = "red";
+        //Configurações do estado do mapa,proporção de zoom, posição
         this.proportion = 1;
         this.posX = 0;
         this.posY = 0;
@@ -17,6 +43,7 @@ var MapMgr = (function () {
         this.andares = map[this.andarAt].andares;
         this.bgImg = new Image();
         this.bgImg.src = map[0].fundo;
+        //this.bgImg.width*=0.1;
         this.bgImg.onload = function () {
             console.log("Terminou de carregar:" + this.width + "x" + this.height);
         };
@@ -29,6 +56,7 @@ var MapMgr = (function () {
         this.drawFails();
     };
     MapMgr.prototype.drawWalls = function () {
+        //Salva as configurações do contexto anterior...
         this.ctx.save();
         console.log("Desenhando paredes...");
         this.ctx.strokeStyle = this.wallColor;
@@ -47,6 +75,7 @@ var MapMgr = (function () {
             this.ctx.stroke();
             i++;
         }
+        //restaura as configurações do contexto anterior...
         this.ctx.restore();
     };
     MapMgr.prototype.drawFails = function () {
@@ -99,6 +128,7 @@ var MapMgr = (function () {
     MapMgr.prototype.moveDown = function (px) {
         this.posY += px;
     };
+    //Metodo que calcula as novas coordenadas para o canvas de acordo com o zoom e o local do mapa
     MapMgr.prototype.getRelative = function (coord) {
         var x = (coord[0] + this.posX) * this.proportion;
         var y = (coord[1] + this.posY) * this.proportion;
