@@ -23,14 +23,25 @@
 var Controller = (function () {
     function Controller() {
         console.log("Inicializando controller");
+        // Mapa das teclas pressionadas, toda vez que uma dessas teclas é pressionada sua posição no objeto abaixo é atualizada com true
+        // e quando a tecla é solta esse valor muda para false, com isso é possível tratar o pressionamento de múltiplas teclas
+        this.keyMap = { "ArrowRight": false, "ArrowLeft": false, "ArrowUp": false, "ArrowDown": false };
         this.inicio = document.getElementById("inicio");
         this.aviso = document.getElementById("aviso");
         this.debug = document.getElementById("debug");
+        if (!this.inicio || !this.aviso || !this.debug) {
+            console.error("O jogo não funcionará corretamente, uma ou mais views não foram encontradas no arquivo HTML principal.");
+            alert("Erro, uma ou mais views não foram encontradas, o jogo não funcionará corretamente");
+        }
         this.canvasElement = document.getElementById("canvas");
         this.canvasCtx = this.canvas.getContext("2d");
-        this.view("inicio");
+        if (!this.inicio || !this.aviso || !this.debug)
+            this.view("inicio");
         this.registerEvents();
     }
+    /*
+        Altera a tela atual para a que foi passada como parâmetro, "" = a principal do jogo (sem nenhuma janela de aviso ou opções)
+    */
     Controller.prototype.view = function (nome) {
         console.log("mudando para tela: " + nome);
         switch (nome) {
@@ -58,27 +69,64 @@ var Controller = (function () {
     };
     Controller.prototype.registerEvents = function () {
         window.onresize = this.resizeCanvas;
-        //Teclas para movimentar o mapa
-        document.getElementById("body").addEventListener("keydown", function (evento) {
-            //Direita
-            if (evento.keyCode == 39) {
-                mapMgr.moveLeft(10);
+        onkeydown = onkeyup = function (evento) {
+            //Como dentro de um evento o escopo é outro (objeto Window) então para acessar a variável keyMap precisa-se referenciar o objeto control, talvez exista uma forma melhor de se fazer isso.
+            var map = control.keyMap;
+            //evento.key contém o nome da tecla i.e: 'ArrowDown'
+            map[evento.key] = evento.type == 'keydown';
+            // Verifica se as teclas para movimentar o mapa estão pressionadas e então atualiza aqs coordenadas do personagem
+            //Teclas cima e Direita
+            if (map["ArrowUp"] && map["ArrowRight"]) {
+                //Calcula o quando deve ser deslocado nos eixos x e y para que o movimento total do mapa seja o mesmo de mapMgr.speed, esta formula é derivada do clássico teorema de pitágoras h^2 = x^2 + y^2
+                var move = mapMgr.moveSpeed * Math.sqrt(0.5);
+                console.log("Cateto: " + move);
+                mapMgr.moveLeft(move);
+                mapMgr.moveDown(move);
                 mapMgr.drawMap();
             }
-            else if (evento.keyCode == 37) {
-                mapMgr.moveRight(10);
+            else if (map["ArrowUp"] && map["ArrowLeft"]) {
+                var move = mapMgr.moveSpeed * Math.sqrt(0.5);
+                console.log("Cateto: " + move);
+                mapMgr.moveDown(move);
+                mapMgr.moveRight(move);
                 mapMgr.drawMap();
             }
-            //Cima
-            if (evento.keyCode == 38) {
-                mapMgr.moveDown(10);
+            else if (map["ArrowDown"] && map["ArrowLeft"]) {
+                var move = mapMgr.moveSpeed * Math.sqrt(0.5);
+                console.log("Cateto: " + move);
+                mapMgr.moveUp(move);
+                mapMgr.moveRight(move);
                 mapMgr.drawMap();
             }
-            else if (evento.keyCode == 40) {
-                mapMgr.moveUp(10);
+            else if (map["ArrowDown"] && map["ArrowRight"]) {
+                var move = mapMgr.moveSpeed * Math.sqrt(0.5);
+                mapMgr.moveUp(move);
+                mapMgr.moveLeft(move);
                 mapMgr.drawMap();
             }
-        });
+            else {
+                if (map["ArrowRight"]) {
+                    mapMgr.moveLeft(mapMgr.moveSpeed);
+                    mapMgr.drawMap();
+                }
+                //Esquerda
+                if (map["ArrowLeft"]) {
+                    mapMgr.moveRight(mapMgr.moveSpeed);
+                    mapMgr.drawMap();
+                }
+                //Cima
+                if (map["ArrowUp"]) {
+                    mapMgr.moveDown(mapMgr.moveSpeed);
+                    mapMgr.drawMap();
+                }
+                //Baixo
+                if (map["ArrowDown"]) {
+                    mapMgr.moveUp(mapMgr.moveSpeed);
+                    mapMgr.drawMap();
+                }
+            }
+        };
+        //);
     };
     Controller.prototype.resizeCanvas = function () {
         console.log("redmensionou");
