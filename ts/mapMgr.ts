@@ -33,10 +33,25 @@ class MapMgr{
 	private andares:Array<{x:number,y:number}>;
 	private bgImg:HTMLImageElement;
 	
+	public isReady:boolean;
+	
+	public spawX:number;
+	public spawY:number;
 	//Configurações do estado do mapa,proporção de zoom, posição
-	public proportion=1;
+	//Largura/altura do mapa completo
+	public width:number;
+	public height:number;
+	//zoom
+	public proportion=4;
+	//Posição base em que os elementos serão desenhados (a imagem de fundo é exatamente nesta posição)
 	public posX=0;
 	public posY=0;
+	/*//Foco da 'câmera', indica qual local estará no centro da tela - Nao utilizado - Possível utilização: Caso se opite por possibilitar
+	//O acesso ao controle de zoom para o usuario, pode ser usado para sempre ter salvo a localização anterior do centro
+	public fX:number;
+	public fY:number;*/
+	//Velocidade de movimentção do mapa
+	public moveSpeed=50;
 	
 	//Eu passo o contexto do canvas para o proprio mapamgr desenhar nele
 	//Obs: quando uso private,public ou protected antes de um parametro, ele se torna atributo da classe automaticamente
@@ -47,36 +62,95 @@ class MapMgr{
 	
 	public loadMap(map:any,andar?:number){
 		console.log("Carregando mapa "+map[0].nome + "...");
+		
+		this.width = map[this.andarAt].largura;
+		this.height = map[this.andarAt].altura;
 
 		this.walls=map[this.andarAt].paredes;
 		this.fails=map[this.andarAt].falhas;
 		this.andares=map[this.andarAt].andares;
-		
+		this.spawX = map[this.andarAt].spaw.x;
+		this.spawY = map[this.andarAt].spaw.y;
 		this.bgImg = new Image();
 		
+		this.isReady = false;
 		this.bgImg.src = map[0].fundo;
 		//this.bgImg.width*=0.1;
 		this.bgImg.onload=function(){
-			console.log("Terminou de carregar:"+this.width + "x" + this.height);
+			//console.log("Terminou de carregar:"+this.src);
+			//Usa-se o objeto da classe, pois dento de um evento o contexto é o do objeto que disparou o evento
+			mapMgr.isReady = true;
+			mapMgr.drawMap();
 		}
+		
+		this.centerIn(this.spawX, this.spawY);
 	}
 	
 	public drawMap(){
+		console.log("Redesenhando mapa...");
 		this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
-		
-		console.log("Desenhando imagem de fundo "+this.bgImg.src);
-		this.ctx.drawImage(this.bgImg,this.posX,this.posY,this.bgImg.width*this.proportion,this.bgImg.height*this.proportion);
-		
+		//Desenha o plano de fundo
+		this.drawBg();
+		//Desenha as paredes(Objetos de colisão)
 		this.drawWalls();
+		//Desenha as falhas de acessibilidade visíveis
 		this.drawFails();
 		
+	}
+	
+	public drawBg(){
+		this.ctx.beginPath();
+		this.ctx.rect(this.posX,this.posY,this.width*this.proportion,this.height*this.proportion);
+		this.ctx.stroke();
+		this.ctx.drawImage(this.bgImg,this.posX,this.posY,this.width*this.proportion,this.height*this.proportion);
+	}
+
+	public centerIn(Xw:number,Yw:number):void{
+		//PONTO INICIAL
+		//Coordenadas do centro da tela (do canvas)
+		var cCanvasX = this.canvas.width/2;
+		var cCanvasY = this.canvas.height/2;
+		//Adapta as coordenadas para o zoom atual
+		Xw*=this.proportion;
+		Yw*=this.proportion;
+		//Coordenadas do ponto do mapa que se deseja focar com relação ao canvas, (a coordenada passada via parâmetro deve ser com relação ao mapa, uma media do mapa)
+		//PONTO DE DESTINO
+		var localPx = this.posX + Xw;
+		var localPy = this.posY + Yw;
+		console.log("localPx: " + localPx + " localPy: " + localPy);
+		//As distâncias Dx e Dy de PD ate CC
+		var Dx = localPx - cCanvasX;
+		var Dy = localPy - cCanvasY;
+		
+		console.log("Dx: " + Dx + " Dy: " + Dy);
+		//A diferença entre os dois pontos é eliminada subtraindo do ponto final essa diferença
+		this.posX=(this.posX-Dx);
+		this.posY=(this.posY-Dy);
+		
+		console.log("posX: " + this.posX + " posY: " + this.posY);
+		this.drawMap();
+		
+		this.showCenter();
+	}
+	public showCenter(){
+		var cCanvasX = this.canvas.width/2;
+		var cCanvasY = this.canvas.height/2;
+		
+		this.ctx.save();
+		this.ctx.beginPath();
+		this.ctx.strokeStyle = "red";
+		this.ctx.arc(cCanvasX,cCanvasY,30,0,2*Math.PI);
+		
+		this.ctx.stroke();
+		this.ctx.restore();
+		console.log("Center X: " + cCanvasX + " Y: " + cCanvasY);
 	}
 	
 	public drawWalls(){
 		//Salva as configurações do contexto anterior...
 		this.ctx.save();
 		
-		console.log("Desenhando paredes...");
+		//console.log("Desenhando paredes...");
 		
 		this.ctx.strokeStyle=this.wallColor;
 		
@@ -107,7 +181,7 @@ class MapMgr{
 	public drawFails(){
 		this.ctx.save();
 		
-		console.log("Desenhando falhas...");
+		//console.log("Desenhando falhas...");
 		
 		this.ctx.fillStyle=this.failColor;
 		
@@ -128,36 +202,32 @@ class MapMgr{
 		
 		this.ctx.restore()
 	}
-	public zoomIn(percent:number){
-		var widthAnt=this.bgImg.width*this.proportion;
-		var heigthAnt=this.bgImg.height*this.proportion;
-		
+	
+	/*public zoomIn(percent:number){
+		var centerMapX = (this.canvas.width/2) - this.posX;
+		var centerMapY = (this.canvas.height/2) - this.posY;
+		console.log("Parte centralizada: x:" + centerMapX + ", y:" + centerMapY);
 		this.proportion+=percent;
 		
-		var widthNew=this.bgImg.width*this.proportion;
-		var heigthNew=this.bgImg.height*this.proportion;
-		
-		var toCentLeft = (widthNew-widthAnt)/2;
-		var toCentUp = (heigthNew-heigthAnt)/2;
-		
-		this.moveLeft(toCentLeft);
-		this.moveUp(toCentLeft);
+		//Recentraliza novamente o mapa no ponto anteriormente no centro
+		this.centerIn(centerMapX,centerMapY);
 	}
 	public zoomOut(percent:number){
-		var widthAnt=this.bgImg.width*this.proportion;
-		var heigthAnt=this.bgImg.height*this.proportion;
+		if((this.proportion - percent) <= 0.5){
+			this.proportion = 0.5;
+		}
+		else{
+			var centerMapX = (this.canvas.width/2) - this.posX;
+			var centerMapY = (this.canvas.height/2) - this.posY;
+			
+			console.log("Parte centralizada: x:" + centerMapX + ", y:" + centerMapY);
+			this.proportion-=percent;
+			
+			//Recentraliza novamente o mapa no ponto anteriormente no centro
+			this.centerIn(centerMapX,centerMapY);
+		}
 		
-		this.proportion-=percent;
-		
-		var widthNew=this.bgImg.width*this.proportion;
-		var heigthNew=this.bgImg.height*this.proportion;
-		
-		var toCentLeft = (widthAnt-widthNew)/2;
-		var toCentUp = (heigthAnt-heigthNew)/2;
-		
-		this.moveRight(toCentLeft);
-		this.moveDown(toCentLeft);
-	}
+	}*/
 	
 	public moveRight(px:number){
 		this.posX+=px;
@@ -171,16 +241,27 @@ class MapMgr{
 	public moveDown(px:number){
 		this.posY+=px;
 	}
-	//Metodo que calcula as novas coordenadas para o canvas de acordo com o zoom e o local do mapa
+	//Metodo que calcula as coordenadas de um ponto dado com relação ao mapa, no canvas, levado em consideração a posição do mapa e a proporção de zoom
 	private getRelative(coord:[number,number]):[number,number]{
-		var x = (coord[0]+this.posX)*this.proportion;
-		var y = (coord[1]+this.posY)*this.proportion;
+		var x = (coord[0]*this.proportion)+this.posX;
+		var y = (coord[1]*this.proportion)+this.posY;
 		var tuple:[number,number];
 		tuple = [x,y];
 		return tuple;
 	}
+	/*public getCenteredPointInMap(Cx:number, Cy:number):[number,number]{
+		//Coordenadas do centro da tela (do canvas)
+		var cCanvasX = this.canvas.width/2;
+		var cCanvasY = this.canvas.height/2;
+		
+		var tuple:[number,number];
+		tuple = [x,y];
+		return tuple;
+	}*/
+	/*private getInCanvasPoint(){
+		
+	}*/
 	get bg():HTMLImageElement{
 		return this.bgImg;
 	}
-	
 }
