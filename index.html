@@ -62,9 +62,9 @@
 	
 		
 	<!--<div id='zoom-panel'>
-		<div class="btn-zoom" id ="zoomp" onclick="mapMgr.zoomIn(0.1);mapMgr.drawMap();">
+		<div class="btn-zoom" id ="zoomp" onclick="mapMgr.zoomIn(0.4);mapMgr.drawMap();">
 		</div>
-		<div class="btn-zoom" id="zoomm" onclick="mapMgr.zoomOut(0.1);mapMgr.drawMap();">
+		<div class="btn-zoom" id="zoomm" onclick="mapMgr.zoomOut(0.4);mapMgr.drawMap();">
 		</div>
 	</div>!-->
 
@@ -128,7 +128,12 @@
 					</li>
 					<li>
 						<button onclick="alert('Funcionalidade implementada');">Modo Criação</button>
+					</li><br>
+					<li>
+						<span id="info"></span><br>
+						<span>CenterIn:</span><input type='number' id="xcenter"/>, <input type='number' id="ycenter"/><button onclick="mapMgr.centerIn(document.getElementById('xcenter').value, document.getElementById('ycenter').value);">Ir</button>
 					</li>
+					
 				</ul>
 				
 		</div>

@@ -22,16 +22,21 @@
 */
 var control:Controller;
 var mapMgr:MapMgr;
+
 //Inicialização depois do corpo da pagina ter carregado
-function inicializar(){	
+function inicializar(){
 	control = new Controller();
-	
 	mapMgr = new MapMgr(control.canvas);
 	
 	control.view("debug");
+	//Ajusta o canvas ao tamanho da tela atual... E também já redesenha tudo chamando o metodo drawMap() de mapMgr
+	control.resizeCanvas();
 	
 	mapMgr.loadMap(mapa,0);
 	
-	//Ajusta o canvas ao tamanho da tela atual... E também já redesenha tudo chamando o metodo drawMap() de mapMgr
-	control.resizeCanvas();
+	document.getElementById('info').innerHTML = "Largura do mapa " + mapMgr.width + "<br/> Altura:" + mapMgr.height;
+}
+
+function loop(){
+	
 }

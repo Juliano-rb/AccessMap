@@ -134,7 +134,8 @@ var Controller = (function () {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         //Pois quando o canvas é redmensionado ele é totalmente limpo, então é necessário ser redesenhado
-        mapMgr.drawMap();
+        if (mapMgr.isReady)
+            mapMgr.drawMap();
     };
     Object.defineProperty(Controller.prototype, "ctx", {
         get: function () {

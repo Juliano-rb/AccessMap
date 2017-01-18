@@ -16,7 +16,6 @@
     You should have received a copy of the GNU General Public License
     along with AccessMap.
     If not, see <http://www.gnu.org/licenses/>.
-   
 
     Contact: rocha.juliano.b@gmail.com and silvio.santos@arapiraca.ufal.br
     This project and its developers are part of the 'Coletivo Eidi' group <http://sites.google.com/site/eidicoletivo/>.

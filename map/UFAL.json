@@ -1,8 +1,11 @@
-var mapa=
+﻿var mapa=
 [
 	{
 		"nome":"Terreo",
 		"fundo":"map/UFAL.png",
+		"spaw":{"x":1090, "y":970},
+		"largura":1406,
+		"altura":1163,
 		"paredes":
 		[
 			{ "x0":20,"y0":10, "x1":400,"y1":10 },
@@ -34,7 +37,10 @@ var mapa=
 	
 	{
 		"nome":"1º andar",
-		"fundo":"BlocoC.png",
+		"fundo":"map/BlocoC.png",
+		"spaw":{"x":481, "y":152},
+		"largura":500,
+		"altura":500,
 		"paredes":
 		[
 			{ "x0":100,"y0":500, "x1":320,"y1":500 },

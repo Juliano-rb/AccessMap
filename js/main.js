@@ -16,7 +16,6 @@
     You should have received a copy of the GNU General Public License
     along with AccessMap.
     If not, see <http://www.gnu.org/licenses/>.
-   
 
     Contact: rocha.juliano.b@gmail.com and silvio.santos@arapiraca.ufal.br
     This project and its developers are part of the 'Coletivo Eidi' group <http://sites.google.com/site/eidicoletivo/>.
@@ -28,7 +27,10 @@ function inicializar() {
     control = new Controller();
     mapMgr = new MapMgr(control.canvas);
     control.view("debug");
-    mapMgr.loadMap(mapa, 0);
     //Ajusta o canvas ao tamanho da tela atual... E também já redesenha tudo chamando o metodo drawMap() de mapMgr
     control.resizeCanvas();
+    mapMgr.loadMap(mapa, 0);
+    document.getElementById('info').innerHTML = "Largura do mapa " + mapMgr.width + "<br/> Altura:" + mapMgr.height;
+}
+function loop() {
 }
