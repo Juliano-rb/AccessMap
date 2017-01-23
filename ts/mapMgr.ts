@@ -21,6 +21,7 @@
 	This project and its developers are part of the 'Coletivo Eidi' group <http://sites.google.com/site/eidicoletivo/>.
 */
 class MapMgr{
+	private character:Character;
 	private wallWidth=2;
 	private wallColor="blue";
 	private failColor="red";
@@ -46,12 +47,8 @@ class MapMgr{
 	//Posição base em que os elementos serão desenhados (a imagem de fundo é exatamente nesta posição)
 	public posX=0;
 	public posY=0;
-	/*//Foco da 'câmera', indica qual local estará no centro da tela - Nao utilizado - Possível utilização: Caso se opite por possibilitar
-	//O acesso ao controle de zoom para o usuario, pode ser usado para sempre ter salvo a localização anterior do centro
-	public fX:number;
-	public fY:number;*/
 	//Velocidade de movimentção do mapa
-	public moveSpeed=50;
+	public moveSpeed=10;
 	
 	//Eu passo o contexto do canvas para o proprio mapamgr desenhar nele
 	//Obs: quando uso private,public ou protected antes de um parametro, ele se torna atributo da classe automaticamente
@@ -80,14 +77,22 @@ class MapMgr{
 			//console.log("Terminou de carregar:"+this.src);
 			//Usa-se o objeto da classe, pois dento de um evento o contexto é o do objeto que disparou o evento
 			mapMgr.isReady = true;
-			mapMgr.drawMap();
+			mapMgr.update();
 		}
 		
 		this.centerIn(this.spawX, this.spawY);
 	}
-	
+	public update(){
+		console.log("Update em tudo");
+		this.drawMap();
+		this.character.update();
+		this.character.draw();
+	}
+	public setMainChar(c:Character){
+		this.character = c;
+	}
 	public drawMap(){
-		console.log("Redesenhando mapa...");
+		//console.log("Redesenhando mapa...");
 		this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
 		//Desenha o plano de fundo
 		this.drawBg();
@@ -97,14 +102,6 @@ class MapMgr{
 		this.drawFails();
 		
 	}
-	
-	public drawBg(){
-		this.ctx.beginPath();
-		this.ctx.rect(this.posX,this.posY,this.width*this.proportion,this.height*this.proportion);
-		this.ctx.stroke();
-		this.ctx.drawImage(this.bgImg,this.posX,this.posY,this.width*this.proportion,this.height*this.proportion);
-	}
-
 	public centerIn(Xw:number,Yw:number):void{
 		//PONTO INICIAL
 		//Coordenadas do centro da tela (do canvas)
@@ -117,20 +114,27 @@ class MapMgr{
 		//PONTO DE DESTINO
 		var localPx = this.posX + Xw;
 		var localPy = this.posY + Yw;
-		console.log("localPx: " + localPx + " localPy: " + localPy);
+		//console.log("localPx: " + localPx + " localPy: " + localPy);
 		//As distâncias Dx e Dy de PD ate CC
 		var Dx = localPx - cCanvasX;
 		var Dy = localPy - cCanvasY;
 		
-		console.log("Dx: " + Dx + " Dy: " + Dy);
+		//console.log("Dx: " + Dx + " Dy: " + Dy);
 		//A diferença entre os dois pontos é eliminada subtraindo do ponto final essa diferença
 		this.posX=(this.posX-Dx);
 		this.posY=(this.posY-Dy);
 		
-		console.log("posX: " + this.posX + " posY: " + this.posY);
-		this.drawMap();
+		//console.log("posX: " + this.posX + " posY: " + this.posY);
+		this.character.ajustOnScreen();
+		this.update();
 		
 		this.showCenter();
+	}
+	public drawBg(){
+		this.ctx.beginPath();
+		this.ctx.rect(this.posX,this.posY,this.width*this.proportion,this.height*this.proportion);
+		this.ctx.stroke();
+		this.ctx.drawImage(this.bgImg,this.posX,this.posY,this.width*this.proportion,this.height*this.proportion);
 	}
 	public showCenter(){
 		var cCanvasX = this.canvas.width/2;
@@ -143,7 +147,7 @@ class MapMgr{
 		
 		this.ctx.stroke();
 		this.ctx.restore();
-		console.log("Center X: " + cCanvasX + " Y: " + cCanvasY);
+		//console.log("Center X: " + cCanvasX + " Y: " + cCanvasY);
 	}
 	
 	public drawWalls(){
@@ -231,23 +235,83 @@ class MapMgr{
 	
 	public moveRight(px:number){
 		this.posX+=px;
+		this.character.updateCoord();
+		
+		var collinding = this.checkColision();
+		
+		if(collinding){
+			this.posX-=px;
+			this.update();
+		}
+		else
+			this.update();
+		
 	}
 	public moveLeft(px:number){
 		this.posX-=px;
+		this.character.updateCoord();
+		
+		var collinding = this.checkColision();
+		
+		if(collinding){
+			this.posX+=px;
+			this.update();
+		}
+		else
+			this.update();
 	}
 	public moveUp(px:number){
 		this.posY-=px;
+		
+		this.character.updateCoord();
+		
+		var collinding = this.checkColision();
+		
+		if(collinding){
+			this.posY+=px;
+			this.update();
+		}
+		else
+			this.update();
 	}
 	public moveDown(px:number){
 		this.posY+=px;
+		
+		this.character.updateCoord();
+		
+		var collinding = this.checkColision();
+		
+		if(collinding){
+			this.posY-=px;
+			this.update();
+		}
+		else
+			this.update();
 	}
-	//Metodo que calcula as coordenadas de um ponto dado com relação ao mapa, no canvas, levado em consideração a posição do mapa e a proporção de zoom
+	public checkColision():boolean{
+		for(var i =0; i < this.walls.length; i++){
+			if(Colision.isColidingCharWall(this.character,this.walls[i])){
+				return true;
+			}
+		}
+		return false;
+	}
+	//Converte ponto no mapa para ponto no canvas
 	private getRelative(coord:[number,number]):[number,number]{
 		var x = (coord[0]*this.proportion)+this.posX;
 		var y = (coord[1]*this.proportion)+this.posY;
 		var tuple:[number,number];
 		tuple = [x,y];
 		return tuple;
+	}
+	//Converte ponto no canvas para ponto no mapa
+	public canvasCoordToMap(x:number,y:number):{x:number,y:number}{
+		var mapX = (x- this.posX)/this.proportion;
+		var mapY = (y- this.posY)/this.proportion;
+
+		var coord ={x:mapX, y:mapY};
+
+		return coord;
 	}
 	/*public getCenteredPointInMap(Cx:number, Cy:number):[number,number]{
 		//Coordenadas do centro da tela (do canvas)

@@ -33,12 +33,8 @@ var MapMgr = (function () {
         //Posição base em que os elementos serão desenhados (a imagem de fundo é exatamente nesta posição)
         this.posX = 0;
         this.posY = 0;
-        /*//Foco da 'câmera', indica qual local estará no centro da tela - Nao utilizado - Possível utilização: Caso se opite por possibilitar
-        //O acesso ao controle de zoom para o usuario, pode ser usado para sempre ter salvo a localização anterior do centro
-        public fX:number;
-        public fY:number;*/
         //Velocidade de movimentção do mapa
-        this.moveSpeed = 50;
+        this.moveSpeed = 10;
         this.andarAt = 0;
         this.ctx = this.canvas.getContext("2d");
     }
@@ -59,12 +55,21 @@ var MapMgr = (function () {
             //console.log("Terminou de carregar:"+this.src);
             //Usa-se o objeto da classe, pois dento de um evento o contexto é o do objeto que disparou o evento
             mapMgr.isReady = true;
-            mapMgr.drawMap();
+            mapMgr.update();
         };
         this.centerIn(this.spawX, this.spawY);
     };
+    MapMgr.prototype.update = function () {
+        console.log("Update em tudo");
+        this.drawMap();
+        this.character.update();
+        this.character.draw();
+    };
+    MapMgr.prototype.setMainChar = function (c) {
+        this.character = c;
+    };
     MapMgr.prototype.drawMap = function () {
-        console.log("Redesenhando mapa...");
+        //console.log("Redesenhando mapa...");
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         //Desenha o plano de fundo
         this.drawBg();
@@ -72,12 +77,6 @@ var MapMgr = (function () {
         this.drawWalls();
         //Desenha as falhas de acessibilidade visíveis
         this.drawFails();
-    };
-    MapMgr.prototype.drawBg = function () {
-        this.ctx.beginPath();
-        this.ctx.rect(this.posX, this.posY, this.width * this.proportion, this.height * this.proportion);
-        this.ctx.stroke();
-        this.ctx.drawImage(this.bgImg, this.posX, this.posY, this.width * this.proportion, this.height * this.proportion);
     };
     MapMgr.prototype.centerIn = function (Xw, Yw) {
         //PONTO INICIAL
@@ -91,17 +90,24 @@ var MapMgr = (function () {
         //PONTO DE DESTINO
         var localPx = this.posX + Xw;
         var localPy = this.posY + Yw;
-        console.log("localPx: " + localPx + " localPy: " + localPy);
+        //console.log("localPx: " + localPx + " localPy: " + localPy);
         //As distâncias Dx e Dy de PD ate CC
         var Dx = localPx - cCanvasX;
         var Dy = localPy - cCanvasY;
-        console.log("Dx: " + Dx + " Dy: " + Dy);
+        //console.log("Dx: " + Dx + " Dy: " + Dy);
         //A diferença entre os dois pontos é eliminada subtraindo do ponto final essa diferença
         this.posX = (this.posX - Dx);
         this.posY = (this.posY - Dy);
-        console.log("posX: " + this.posX + " posY: " + this.posY);
-        this.drawMap();
+        //console.log("posX: " + this.posX + " posY: " + this.posY);
+        this.character.ajustOnScreen();
+        this.update();
         this.showCenter();
+    };
+    MapMgr.prototype.drawBg = function () {
+        this.ctx.beginPath();
+        this.ctx.rect(this.posX, this.posY, this.width * this.proportion, this.height * this.proportion);
+        this.ctx.stroke();
+        this.ctx.drawImage(this.bgImg, this.posX, this.posY, this.width * this.proportion, this.height * this.proportion);
     };
     MapMgr.prototype.showCenter = function () {
         var cCanvasX = this.canvas.width / 2;
@@ -112,7 +118,7 @@ var MapMgr = (function () {
         this.ctx.arc(cCanvasX, cCanvasY, 30, 0, 2 * Math.PI);
         this.ctx.stroke();
         this.ctx.restore();
-        console.log("Center X: " + cCanvasX + " Y: " + cCanvasY);
+        //console.log("Center X: " + cCanvasX + " Y: " + cCanvasY);
     };
     MapMgr.prototype.drawWalls = function () {
         //Salva as configurações do contexto anterior...
@@ -180,23 +186,70 @@ var MapMgr = (function () {
     }*/
     MapMgr.prototype.moveRight = function (px) {
         this.posX += px;
+        this.character.updateCoord();
+        var collinding = this.checkColision();
+        if (collinding) {
+            this.posX -= px;
+            this.update();
+        }
+        else
+            this.update();
     };
     MapMgr.prototype.moveLeft = function (px) {
         this.posX -= px;
+        this.character.updateCoord();
+        var collinding = this.checkColision();
+        if (collinding) {
+            this.posX += px;
+            this.update();
+        }
+        else
+            this.update();
     };
     MapMgr.prototype.moveUp = function (px) {
         this.posY -= px;
+        this.character.updateCoord();
+        var collinding = this.checkColision();
+        if (collinding) {
+            this.posY += px;
+            this.update();
+        }
+        else
+            this.update();
     };
     MapMgr.prototype.moveDown = function (px) {
         this.posY += px;
+        this.character.updateCoord();
+        var collinding = this.checkColision();
+        if (collinding) {
+            this.posY -= px;
+            this.update();
+        }
+        else
+            this.update();
     };
-    //Metodo que calcula as coordenadas de um ponto dado com relação ao mapa, no canvas, levado em consideração a posição do mapa e a proporção de zoom
+    MapMgr.prototype.checkColision = function () {
+        for (var i = 0; i < this.walls.length; i++) {
+            if (Colision.isColidingCharWall(this.character, this.walls[i])) {
+                return true;
+            }
+        }
+        return false;
+    };
+    //Converte ponto no mapa para ponto no canvas
     MapMgr.prototype.getRelative = function (coord) {
         var x = (coord[0] * this.proportion) + this.posX;
         var y = (coord[1] * this.proportion) + this.posY;
         var tuple;
         tuple = [x, y];
         return tuple;
+    };
+    //Converte ponto no canvas para ponto no mapa
+    MapMgr.prototype.canvasCoordToMap = function (x, y) {
+        var mapX = (x - this.posX) / this.proportion;
+        var mapY = (y - this.posY) / this.proportion;
+        var coord = { x: mapX, y: mapY };
+        return coord;
     };
     Object.defineProperty(MapMgr.prototype, "bg", {
         /*public getCenteredPointInMap(Cx:number, Cy:number):[number,number]{

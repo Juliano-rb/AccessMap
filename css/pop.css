@@ -27,12 +27,11 @@ li:active{
 	border:2px black solid;
 }
 li{
-	box-sizing: border-box;
 	background-color:white;
 	padding:10px;
 	margin-left:10px;
 	border-radius:20px;
-  float: left;
+	float: left;
 }
 .itemthumb{
   display: block;

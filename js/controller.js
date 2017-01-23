@@ -82,47 +82,39 @@ var Controller = (function () {
                 console.log("Cateto: " + move);
                 mapMgr.moveLeft(move);
                 mapMgr.moveDown(move);
-                mapMgr.drawMap();
             }
             else if (map["ArrowUp"] && map["ArrowLeft"]) {
                 var move = mapMgr.moveSpeed * Math.sqrt(0.5);
                 console.log("Cateto: " + move);
                 mapMgr.moveDown(move);
                 mapMgr.moveRight(move);
-                mapMgr.drawMap();
             }
             else if (map["ArrowDown"] && map["ArrowLeft"]) {
                 var move = mapMgr.moveSpeed * Math.sqrt(0.5);
                 console.log("Cateto: " + move);
                 mapMgr.moveUp(move);
                 mapMgr.moveRight(move);
-                mapMgr.drawMap();
             }
             else if (map["ArrowDown"] && map["ArrowRight"]) {
                 var move = mapMgr.moveSpeed * Math.sqrt(0.5);
                 mapMgr.moveUp(move);
                 mapMgr.moveLeft(move);
-                mapMgr.drawMap();
             }
             else {
                 if (map["ArrowRight"]) {
                     mapMgr.moveLeft(mapMgr.moveSpeed);
-                    mapMgr.drawMap();
                 }
                 //Esquerda
                 if (map["ArrowLeft"]) {
                     mapMgr.moveRight(mapMgr.moveSpeed);
-                    mapMgr.drawMap();
                 }
                 //Cima
                 if (map["ArrowUp"]) {
                     mapMgr.moveDown(mapMgr.moveSpeed);
-                    mapMgr.drawMap();
                 }
                 //Baixo
                 if (map["ArrowDown"]) {
                     mapMgr.moveUp(mapMgr.moveSpeed);
-                    mapMgr.drawMap();
                 }
             }
         };
@@ -135,7 +127,7 @@ var Controller = (function () {
         canvas.height = window.innerHeight;
         //Pois quando o canvas é redmensionado ele é totalmente limpo, então é necessário ser redesenhado
         if (mapMgr.isReady)
-            mapMgr.drawMap();
+            mapMgr.update();
     };
     Object.defineProperty(Controller.prototype, "ctx", {
         get: function () {

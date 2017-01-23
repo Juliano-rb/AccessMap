@@ -106,7 +106,7 @@ class Controller{
 				
 				mapMgr.moveLeft(move);
 				mapMgr.moveDown(move);
-				mapMgr.drawMap();
+				//mapMgr.update();
 			}
 			//Teclas Cima e Esquerda
 			else if(map["ArrowUp"] && map["ArrowLeft"]){
@@ -115,7 +115,7 @@ class Controller{
 				
 				mapMgr.moveDown(move);
 				mapMgr.moveRight(move);
-				mapMgr.drawMap();
+				//mapMgr.update();
 			}
 			//Teclas Baixo e Esquerda
 			else if(map["ArrowDown"] && map["ArrowLeft"]){
@@ -124,7 +124,7 @@ class Controller{
 				
 				mapMgr.moveUp(move);
 				mapMgr.moveRight(move);
-				mapMgr.drawMap();
+				//mapMgr.update();
 			}
 			//Teclas Baixo e Direita
 			else if(map["ArrowDown"] && map["ArrowRight"]){
@@ -132,28 +132,28 @@ class Controller{
 				
 				mapMgr.moveUp(move);
 				mapMgr.moveLeft(move);
-				mapMgr.drawMap();
+				//mapMgr.update();
 			}
 			//Mover apenas para um lado apenas se não mover na diagonal, caso contrário o mapa seria movido mais de uma vez
 			else{
 				if(map["ArrowRight"]){
 					mapMgr.moveLeft(mapMgr.moveSpeed);
-					mapMgr.drawMap();
+					//mapMgr.update();
 				}
 				//Esquerda
 				if(map["ArrowLeft"]){
 					mapMgr.moveRight(mapMgr.moveSpeed);
-					mapMgr.drawMap();
+					//mapMgr.update();
 				}
 				//Cima
 				if(map["ArrowUp"]){
 					mapMgr.moveDown(mapMgr.moveSpeed);
-					mapMgr.drawMap();
+					//mapMgr.update();
 				}
 				//Baixo
 				if(map["ArrowDown"]){
 					mapMgr.moveUp(mapMgr.moveSpeed);
-					mapMgr.drawMap();
+					//mapMgr.update();
 				}
 			}
 		}
@@ -168,7 +168,7 @@ class Controller{
 		
 		//Pois quando o canvas é redmensionado ele é totalmente limpo, então é necessário ser redesenhado
 		if(mapMgr.isReady)
-			mapMgr.drawMap();
+			mapMgr.update();
 	}
 	get ctx():CanvasRenderingContext2D{
 		return this.canvasCtx;

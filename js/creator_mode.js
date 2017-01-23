@@ -41,6 +41,6 @@ var Creator = (function () {
         }
         Creator.countOfCoordinates++;
     };
-    Creator.countOfCoordinates = 0;
     return Creator;
 }());
+Creator.countOfCoordinates = 0;
