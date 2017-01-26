@@ -25,16 +25,15 @@ var MapMgr = (function () {
     //Obs: quando uso private,public ou protected antes de um parametro, ele se torna atributo da classe automaticamente
     function MapMgr(canvas) {
         this.canvas = canvas;
-        this.wallWidth = 2;
-        this.wallColor = "blue";
+        this.wallWidth = 3;
+        this.wallColor = "#60E941";
         this.failColor = "red";
         //zoom
-        this.proportion = 4;
         //Posição base em que os elementos serão desenhados (a imagem de fundo é exatamente nesta posição)
         this.posX = 0;
         this.posY = 0;
         //Velocidade de movimentção do mapa
-        this.moveSpeed = 10;
+        this._moveSpeed = 4;
         this.andarAt = 0;
         this.ctx = this.canvas.getContext("2d");
     }
@@ -84,8 +83,8 @@ var MapMgr = (function () {
         var cCanvasX = this.canvas.width / 2;
         var cCanvasY = this.canvas.height / 2;
         //Adapta as coordenadas para o zoom atual
-        Xw *= this.proportion;
-        Yw *= this.proportion;
+        Xw *= config.proportion;
+        Yw *= config.proportion;
         //Coordenadas do ponto do mapa que se deseja focar com relação ao canvas, (a coordenada passada via parâmetro deve ser com relação ao mapa, uma media do mapa)
         //PONTO DE DESTINO
         var localPx = this.posX + Xw;
@@ -105,9 +104,9 @@ var MapMgr = (function () {
     };
     MapMgr.prototype.drawBg = function () {
         this.ctx.beginPath();
-        this.ctx.rect(this.posX, this.posY, this.width * this.proportion, this.height * this.proportion);
+        this.ctx.rect(this.posX, this.posY, this.width * config.proportion, this.height * config.proportion);
         this.ctx.stroke();
-        this.ctx.drawImage(this.bgImg, this.posX, this.posY, this.width * this.proportion, this.height * this.proportion);
+        this.ctx.drawImage(this.bgImg, this.posX, this.posY, this.width * config.proportion, this.height * config.proportion);
     };
     MapMgr.prototype.showCenter = function () {
         var cCanvasX = this.canvas.width / 2;
@@ -153,7 +152,7 @@ var MapMgr = (function () {
             this.ctx.beginPath();
             var fail = this.fails[i];
             var relative = this.getRelative([fail.x, fail.y]);
-            this.ctx.fillRect(relative[0], relative[1], fail.width * this.proportion, fail.height * this.proportion);
+            this.ctx.fillRect(relative[0], relative[1], fail.width * config.proportion, fail.height * config.proportion);
             this.ctx.fill();
             i++;
         }
@@ -187,8 +186,9 @@ var MapMgr = (function () {
     MapMgr.prototype.moveRight = function (px) {
         this.posX += px;
         this.character.updateCoord();
-        var collinding = this.checkColision();
-        if (collinding) {
+        var colide = Colision.checkColision(this);
+        console.log("Coliding: " + colide);
+        if (colide) {
             this.posX -= px;
             this.update();
         }
@@ -198,8 +198,10 @@ var MapMgr = (function () {
     MapMgr.prototype.moveLeft = function (px) {
         this.posX -= px;
         this.character.updateCoord();
-        var collinding = this.checkColision();
-        if (collinding) {
+        var colide = Colision.checkColision(this);
+        console.log("Coliding: " + colide);
+        //Esta coliding caso este movimento seja feito, então volte
+        if (colide) {
             this.posX += px;
             this.update();
         }
@@ -209,8 +211,9 @@ var MapMgr = (function () {
     MapMgr.prototype.moveUp = function (px) {
         this.posY -= px;
         this.character.updateCoord();
-        var collinding = this.checkColision();
-        if (collinding) {
+        var colide = Colision.checkColision(this);
+        console.log("Coliding: " + colide);
+        if (colide) {
             this.posY += px;
             this.update();
         }
@@ -220,34 +223,35 @@ var MapMgr = (function () {
     MapMgr.prototype.moveDown = function (px) {
         this.posY += px;
         this.character.updateCoord();
-        var collinding = this.checkColision();
-        if (collinding) {
+        var colide = Colision.checkColision(this);
+        console.log("Coliding: " + colide);
+        if (colide) {
             this.posY -= px;
             this.update();
         }
         else
             this.update();
     };
-    MapMgr.prototype.checkColision = function () {
-        for (var i = 0; i < this.walls.length; i++) {
-            if (Colision.isColidingCharWall(this.character, this.walls[i])) {
+    /*public checkColision():boolean{
+        for(var i =0; i < this.walls.length; i++){
+            if(Colision.isColidingCharWall(this.character,this.walls[i])){
                 return true;
             }
         }
         return false;
-    };
+    }*/
     //Converte ponto no mapa para ponto no canvas
     MapMgr.prototype.getRelative = function (coord) {
-        var x = (coord[0] * this.proportion) + this.posX;
-        var y = (coord[1] * this.proportion) + this.posY;
+        var x = (coord[0] * config.proportion) + this.posX;
+        var y = (coord[1] * config.proportion) + this.posY;
         var tuple;
         tuple = [x, y];
         return tuple;
     };
     //Converte ponto no canvas para ponto no mapa
     MapMgr.prototype.canvasCoordToMap = function (x, y) {
-        var mapX = (x - this.posX) / this.proportion;
-        var mapY = (y - this.posY) / this.proportion;
+        var mapX = (x - this.posX) / config.proportion;
+        var mapY = (y - this.posY) / config.proportion;
         var coord = { x: mapX, y: mapY };
         return coord;
     };
@@ -266,6 +270,13 @@ var MapMgr = (function () {
         }*/
         get: function () {
             return this.bgImg;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(MapMgr.prototype, "moveSpeed", {
+        get: function () {
+            return this._moveSpeed * config.proportion;
         },
         enumerable: true,
         configurable: true

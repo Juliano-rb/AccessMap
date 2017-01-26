@@ -1,3 +1,3 @@
-var config ={
-    "proportion":4
+var config = {
+	'proportion':5
 }

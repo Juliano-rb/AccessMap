@@ -21,7 +21,7 @@ class Character{
         this.x = mx;
         this.y = my;
 		
-		this.size=15;
+		this.size=2;
         //Calcula as coordenadas do personagem no canvas
         this.ajustOnScreen();
 		this.update();
@@ -46,16 +46,27 @@ class Character{
         this.ctx.lineWidth = 1;
         this.ctx.strokeStyle = "gray";
         this.ctx.beginPath();
-		this.ctx.arc(this.canvasX,this.canvasY,this.size,0,2*Math.PI);
+		console.log("Desenhando raio: " + this.rsize );
+		this.ctx.arc(this.canvasX,this.canvasY,this.rsize,0,2*Math.PI);
 		
 		this.ctx.fill();
         this.ctx.stroke();
-		this.ctx.restore();
         this.ctx.closePath();
+
+        this.ctx.font = "15px Arial";
+        this.ctx.fillText("( " + this.x.toFixed(2) + "," + this.y.toFixed(2)+ " )",this.canvasX,this.canvasY-this.rsize);
+
+		this.ctx.restore();
+        
+       
         //console.log("Desenhando personagem " + this.canvasX + ":" + this.canvasY);
     }
     public ajustOnScreen(){
         this.canvasX = this.canvas.width*this.screenPercentX;
         this.canvasY = this.canvas.height*this.screenPercentY;
     }
+	
+	get rsize():number{
+		return this.size*config.proportion;
+	}
 }

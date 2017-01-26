@@ -1,3 +1,3 @@
 var config = {
-    "proportion": 4
+    'proportion': 5
 };

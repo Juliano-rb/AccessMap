@@ -1,14 +1,59 @@
 class Colision{
+	static checkColision(map:MapMgr):boolean{
+		//Verifica se colidiu com alguma parede (não com obsctáculos)
+		var isColiding = false;
+		for(var i =0; i < map.walls.length; i++){
+			if(this.isColidingCharWall(map.character, map.walls[i])){
+				isColiding = true;
+				break;
+			}
+		}
+		
+		if(isColiding){
+			return isColiding;
+		}
+		else{
+			for(var i =0; i < map.fails.length; i++){
+				if(this.RectCircleColliding(map.character, map.fails[i])){
+					isColiding = true;
+					break;
+				}
+			}
+		}
+		
+		if(isColiding){
+			control.view("aviso");
+			return isColiding;
+		}
+		return isColiding;
+	}
 	static isColidingCharWall(c:Character, p:{ x0:number,y0:number, x1:number,y1:number}):boolean{
 		var dist = this.distToSegment({x:c.x,y:c.y},{x:p.x0,y:p.y0},{x:p.x1,y:p.y1});
-		console.log("Distancia para linha é: " + dist);
+		console.log("O raio do personagem é:" + c.size);
+		
 		if(dist < (c.size)){
 			return true;
 		}
 		else
 			return false;
 	}
-	
+	static RectCircleColliding(c:Character,rect:{x:number,y:number,width:number,height:number}){
+		var distX = Math.abs(c.x - rect.x-rect.width/2);
+		var distY = Math.abs(c.y - rect.y-rect.height/2);
+
+		if (distX > (rect.width/2 + c.size)) { return false; }
+		if (distY > (rect.height/2 + c.size)) { return false; }
+
+		if (distX <= (rect.width/2)) { return true; } 
+		if (distY <= (rect.height/2)) { return true; }
+
+		var dx=distX-rect.width/2;
+		var dy=distY-rect.height/2;
+		return (dx*dx+dy*dy<=(c.size*c.size));
+	}
+	static isColidingOnFail(){
+
+	}
 	static distToSegment(p:{x:number,y:number}, v:{x:number,y:number}, w:{x:number,y:number}):number {
 		return Math.sqrt(Colision.distToSegmentSquared(p, v, w)); 
 	}

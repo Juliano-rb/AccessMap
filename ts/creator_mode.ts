@@ -25,6 +25,11 @@ class Creator {
 	static canvas: HTMLCanvasElement;
 	static canvasCtx: CanvasRenderingContext2D;
 
+	static x0:number;
+	static y0:number;
+	static x1:number;
+	static y1:number;
+
 	static inicialize():void {
 		Creator.canvas = <HTMLCanvasElement>document.getElementById("canvas");
 		Creator.canvasCtx = <CanvasRenderingContext2D> Creator.canvas.getContext("2d");
@@ -39,9 +44,18 @@ class Creator {
 		Creator.inicialize();
 		
 		if(Creator.countOfCoordinates > 0 && Creator.countOfCoordinates % 2 != 0) {
+			var coord = mapMgr.canvasCoordToMap(x, y);
+			this.x1 = coord.x;
+			this.y1 = coord.y;
+
+			control.addCreatorCoord(this.x0,this.y0, this.x1, this.y1);
+
 			Creator.canvasCtx.lineTo(x,y);
 			Creator.canvasCtx.stroke();
 		} else {
+			var coord = mapMgr.canvasCoordToMap(x, y);
+			this.x0 = coord.x;
+			this.y0 = coord.y;
 			Creator.canvasCtx.moveTo(x,y);
 		}
 

@@ -67,6 +67,10 @@ var Controller = (function () {
                 break;
         }
     };
+    Controller.prototype.addCreatorCoord = function (x0, y0, x1, y1) {
+        var textArea = document.getElementById('wallOutput');
+        textArea.innerHTML += "<br>{ 'x0':" + x0 + ",'y0':" + y0 + ", 'x1':" + x1 + ",'y1':" + y1 + " },";
+    };
     Controller.prototype.registerEvents = function () {
         window.onresize = this.resizeCanvas;
         onkeydown = onkeyup = function (evento) {

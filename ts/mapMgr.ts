@@ -21,17 +21,17 @@
 	This project and its developers are part of the 'Coletivo Eidi' group <http://sites.google.com/site/eidicoletivo/>.
 */
 class MapMgr{
-	private character:Character;
-	private wallWidth=2;
-	private wallColor="blue";
+	public character:Character;
+	public wallWidth=3;
+	private wallColor="#60E941";
 	private failColor="red";
 	
-	private andarAt:number;
+	public andarAt:number;
 	private ctx:CanvasRenderingContext2D;
 	
-	private walls:Array<{x0:number,y0:number,x1:number,y1:number}>;
-	private fails:Array<{x:number,y:number,width:number,height:number}>;
-	private andares:Array<{x:number,y:number}>;
+	public walls:Array<{x0:number,y0:number,x1:number,y1:number}>;
+	public fails:Array<{x:number,y:number,width:number,height:number}>;
+	public andares:Array<{x:number,y:number}>;
 	private bgImg:HTMLImageElement;
 	
 	public isReady:boolean;
@@ -43,12 +43,11 @@ class MapMgr{
 	public width:number;
 	public height:number;
 	//zoom
-	public proportion=4;
 	//Posição base em que os elementos serão desenhados (a imagem de fundo é exatamente nesta posição)
 	public posX=0;
 	public posY=0;
 	//Velocidade de movimentção do mapa
-	public moveSpeed=10;
+	private _moveSpeed=4;
 	
 	//Eu passo o contexto do canvas para o proprio mapamgr desenhar nele
 	//Obs: quando uso private,public ou protected antes de um parametro, ele se torna atributo da classe automaticamente
@@ -108,8 +107,8 @@ class MapMgr{
 		var cCanvasX = this.canvas.width/2;
 		var cCanvasY = this.canvas.height/2;
 		//Adapta as coordenadas para o zoom atual
-		Xw*=this.proportion;
-		Yw*=this.proportion;
+		Xw*=config.proportion;
+		Yw*=config.proportion;
 		//Coordenadas do ponto do mapa que se deseja focar com relação ao canvas, (a coordenada passada via parâmetro deve ser com relação ao mapa, uma media do mapa)
 		//PONTO DE DESTINO
 		var localPx = this.posX + Xw;
@@ -132,9 +131,9 @@ class MapMgr{
 	}
 	public drawBg(){
 		this.ctx.beginPath();
-		this.ctx.rect(this.posX,this.posY,this.width*this.proportion,this.height*this.proportion);
+		this.ctx.rect(this.posX,this.posY,this.width*config.proportion,this.height*config.proportion);
 		this.ctx.stroke();
-		this.ctx.drawImage(this.bgImg,this.posX,this.posY,this.width*this.proportion,this.height*this.proportion);
+		this.ctx.drawImage(this.bgImg,this.posX,this.posY,this.width*config.proportion,this.height*config.proportion);
 	}
 	public showCenter(){
 		var cCanvasX = this.canvas.width/2;
@@ -197,7 +196,7 @@ class MapMgr{
 			var fail = this.fails[i];
 			var relative = this.getRelative([fail.x,fail.y]);
 			
-			this.ctx.fillRect(relative[0],relative[1],fail.width*this.proportion,fail.height*this.proportion);
+			this.ctx.fillRect(relative[0],relative[1],fail.width*config.proportion,fail.height*config.proportion);
 			
 			this.ctx.fill();
 			
@@ -232,14 +231,13 @@ class MapMgr{
 		}
 		
 	}*/
-	
 	public moveRight(px:number){
 		this.posX+=px;
 		this.character.updateCoord();
 		
-		var collinding = this.checkColision();
-		
-		if(collinding){
+		var colide = Colision.checkColision(this);
+		console.log("Coliding: " + colide);
+		if(colide){
 			this.posX-=px;
 			this.update();
 		}
@@ -251,9 +249,10 @@ class MapMgr{
 		this.posX-=px;
 		this.character.updateCoord();
 		
-		var collinding = this.checkColision();
-		
-		if(collinding){
+		var colide = Colision.checkColision(this);
+		console.log("Coliding: " + colide);
+		//Esta coliding caso este movimento seja feito, então volte
+		if(colide){
 			this.posX+=px;
 			this.update();
 		}
@@ -265,9 +264,9 @@ class MapMgr{
 		
 		this.character.updateCoord();
 		
-		var collinding = this.checkColision();
-		
-		if(collinding){
+		var colide = Colision.checkColision(this);
+		console.log("Coliding: " + colide);
+		if(colide){
 			this.posY+=px;
 			this.update();
 		}
@@ -279,35 +278,35 @@ class MapMgr{
 		
 		this.character.updateCoord();
 		
-		var collinding = this.checkColision();
-		
-		if(collinding){
+		var colide = Colision.checkColision(this);
+		console.log("Coliding: " + colide);
+		if(colide){
 			this.posY-=px;
 			this.update();
 		}
 		else
 			this.update();
 	}
-	public checkColision():boolean{
+	/*public checkColision():boolean{
 		for(var i =0; i < this.walls.length; i++){
 			if(Colision.isColidingCharWall(this.character,this.walls[i])){
 				return true;
 			}
 		}
 		return false;
-	}
+	}*/
 	//Converte ponto no mapa para ponto no canvas
 	private getRelative(coord:[number,number]):[number,number]{
-		var x = (coord[0]*this.proportion)+this.posX;
-		var y = (coord[1]*this.proportion)+this.posY;
+		var x = (coord[0]*config.proportion)+this.posX;
+		var y = (coord[1]*config.proportion)+this.posY;
 		var tuple:[number,number];
 		tuple = [x,y];
 		return tuple;
 	}
 	//Converte ponto no canvas para ponto no mapa
 	public canvasCoordToMap(x:number,y:number):{x:number,y:number}{
-		var mapX = (x- this.posX)/this.proportion;
-		var mapY = (y- this.posY)/this.proportion;
+		var mapX = (x- this.posX)/config.proportion;
+		var mapY = (y- this.posY)/config.proportion;
 
 		var coord ={x:mapX, y:mapY};
 
@@ -327,5 +326,8 @@ class MapMgr{
 	}*/
 	get bg():HTMLImageElement{
 		return this.bgImg;
+	}
+	get moveSpeed(){
+		return this._moveSpeed*config.proportion;
 	}
 }

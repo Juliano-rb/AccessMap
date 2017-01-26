@@ -40,6 +40,7 @@
 		Outra forma possível de fazer isso seria utilizar módulos no typescript, porém da forma que o projeto se
 		encontra atualmente achamos que uma página estática e sem usar muitos tipos de tecnologias, como um servidor node.js para carregar os módulos do TypeScript, agilizaria o trabalho e o manteria simples
 	!-->
+	<script type="text/javascript" language="javascript" src="js/settings.js"></script>
 	<script type="text/javascript" language="javascript" src="js/controller.js"></script>
 	<script type="text/javascript" language="javascript" src="js/main.js"></script>
 	<script type="text/javascript" language="javascript" src="js/mapMgr.js"></script>
@@ -104,11 +105,8 @@
 			</div>
 			
 				<ul class="opt">
-					<li class="item" onclick="mudar();">
-						<img src="img/p1.jpg" class="itemthumb">
-					</li>
-					<li class="item" onclick="mudar();">
-						<img src="img/p2.jpg" class="itemthumb">
+					<li class="item">
+						<button onclick="control.view('');">Ok</button>
 					</li>
 				</ul>
 				
@@ -142,10 +140,14 @@
 						<button onclick="mapMgr.centerIn(760,945);">Casa Velha</button><br>
 						<span>Ir Para:</span><input type='number' id="xcenter"/>, <input type='number' id="ycenter"/><button onclick="mapMgr.centerIn(document.getElementById('xcenter').value, document.getElementById('ycenter').value);">Ir</button>
 						
-						
 					</li>
-					
 				</ul>
+
+				<div>
+					<h2>Modo Criação:</h2>
+					<h3>Paredes:</h3>
+					<div class="TextArea" id="wallOutput" placeholder="Aqui apareceram as coordenadas das paredes desenhadas" style="background-color: white; overflow-y: scroll; height: 140px;"/>
+				</div>
 				
 		</div>
 	</div>

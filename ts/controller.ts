@@ -88,10 +88,15 @@ class Controller{
 		}
 	}
 	
+	public addCreatorCoord(x0:number, y0:number, x1:number, y1:number){
+		var textArea = document.getElementById('wallOutput');
+
+		textArea.innerHTML += "<br>{ 'x0':" + x0 + ",'y0':" + y0 +", 'x1':" + x1 + ",'y1':" + y1 + " },";
+	}
 	public registerEvents(){
 		window.onresize = this.resizeCanvas;
 				
-		onkeydown = onkeyup = function(evento){	
+		onkeydown = onkeyup = function(evento){
 			//Como dentro de um evento o escopo é outro (objeto Window) então para acessar a variável keyMap precisa-se referenciar o objeto control, talvez exista uma forma melhor de se fazer isso.
 			var map = control.keyMap;
 			//evento.key contém o nome da tecla i.e: 'ArrowDown'
