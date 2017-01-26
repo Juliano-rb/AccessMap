@@ -5,7 +5,8 @@
         "noImplicitAny": true,
         "removeComments": false,
         "preserveConstEnums": true,
-        "outDir": "js/",
+        "outFile": "js/main.js",
+        //"outDir": "js/",
         "sourceMap": false,
 		"target":"es5"
     },
