@@ -3,7 +3,7 @@ class Colision{
 		//Verifica se colidiu com alguma parede (não com obsctáculos)
 		var isColiding = false;
 		for(var i =0; i < map.walls.length; i++){
-			if(this.isColidingCharWall(map.character, map.walls[i])){
+			if(this.isColidingCharWall(map.character, map.walls[i], map.wallWidth)){
 				isColiding = true;
 				break;
 			}
@@ -27,11 +27,11 @@ class Colision{
 		}
 		return isColiding;
 	}
-	static isColidingCharWall(c:Character, p:{ x0:number,y0:number, x1:number,y1:number}):boolean{
+	static isColidingCharWall(c:Character, p:{ x0:number,y0:number, x1:number,y1:number}, wallWidth:number):boolean{
 		var dist = this.distToSegment({x:c.x,y:c.y},{x:p.x0,y:p.y0},{x:p.x1,y:p.y1});
-		console.log("O raio do personagem é:" + c.size);
+		//console.log("O raio do personagem é:" + c.size);
 		
-		if(dist < (c.size)){
+		if(dist < (c.size+wallWidth/2)){
 			return true;
 		}
 		else
@@ -50,9 +50,6 @@ class Colision{
 		var dx=distX-rect.width/2;
 		var dy=distY-rect.height/2;
 		return (dx*dx+dy*dy<=(c.size*c.size));
-	}
-	static isColidingOnFail(){
-
 	}
 	static distToSegment(p:{x:number,y:number}, v:{x:number,y:number}, w:{x:number,y:number}):number {
 		return Math.sqrt(Colision.distToSegmentSquared(p, v, w)); 

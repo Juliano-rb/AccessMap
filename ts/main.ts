@@ -32,14 +32,32 @@ function inicializar(){
 	//Ajusta o canvas ao tamanho da tela atual... E também já redesenha tudo chamando o metodo drawMap() de mapMgr
 	control.resizeCanvas();
 
-	mainChar = new Character(0.5,0.5,mapMgr.spawX, mapMgr.spawY,control.canvas);
+	mainChar = new Character(0.5,0.5,mapMgr.spawX, mapMgr.spawY,control.canvas, config.char_radius);
 
 	mapMgr.setMainChar(mainChar);
 	mapMgr.loadMap(mapa,0);
-	
-	document.getElementById('info').innerHTML = "Largura do mapa " + mapMgr.width + "<br/> Altura:" + mapMgr.height;
-}
 
-function loop(){
+	InputHandler.registerEvents();
+
+	document.getElementById('info').innerHTML = "Largura do mapa " + mapMgr.width + "<br/> Altura:" + mapMgr.height;
+
+	//gameLoop();
+}
+//Para controlar a velocidade de movimento
+var anterior = new Date().getTime();
+var atual:number;
+var decorrido:number;
+function gameLoop(){
+	atual = new Date().getTime();
+	decorrido = atual-anterior;
+	//Move o mapa verificando a variação de x e y a ser movida (dx e dy), esta variação é retornada pelo InputHandler que verifica quais teclas direcionais estão pressionadas
+	var dx = InputHandler.dir.dx;
+	var dy = InputHandler.dir.dy;
+	//O InputHandler retorna a direção a ser seguida pelo personagem, como quem se move é o mapa, então esta direção deve ser invertida invertendo os sinais de dx e dy
+	mapMgr.posX+=(mapMgr.moveSpeed*(-dx));
+	mapMgr.posY+=(mapMgr.moveSpeed*(-dy));
+	mapMgr.update();
 	
+	anterior = atual;
+	requestAnimationFrame(gameLoop);
 }

@@ -27,27 +27,15 @@
 <head>
 	<meta charset='UTF-8'/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		
-	<link rel="stylesheet" href="css/main.css" />
-	<link rel="stylesheet" href="css/pop.css" />
 	
 	<!--Barra de Loading pace.js ;) !-->
 	<link rel="stylesheet" href="css/pace.css" />
 	<script type="text/javascript" language="javascript" src="js/pace.min.js"></script>
-	
+
+	<link rel="stylesheet" href="css/main.css" />
+	<link rel="stylesheet" href="css/pop.css" />		
 	<!--
-		Classes do projeto
-		Outra forma possível de fazer isso seria utilizar módulos no typescript, porém da forma que o projeto se
-		encontra atualmente achamos que uma página estática e sem usar muitos tipos de tecnologias, como um servidor node.js para carregar os módulos do TypeScript, agilizaria o trabalho e o manteria simples
-	!-->
-	<!--
-	<script type="text/javascript" language="javascript" src="js/settings.js"></script>
-	<script type="text/javascript" language="javascript" src="js/controller.js"></script>
-	<script type="text/javascript" language="javascript" src="js/main.js"></script>
-	<script type="text/javascript" language="javascript" src="js/mapMgr.js"></script>
-	<script type="text/javascript" language="javascript" src="js/character.js"></script>
-	<script type="text/javascript" language="javascript" src="js/creator_mode.js"></script>
-	<script type="text/javascript" language="javascript" src="js/colision.js"></script>
+		Arquivo com todos os códigos compilados do jogo
 	!-->
 	<script type="text/javascript" language="javascript" src="js/main.js"></script>
 	<!--
@@ -64,7 +52,6 @@
 	<canvas id="canvas" onclick="Creator.getCoordinates(event)">
 		Seu browser não suporta Canvas :/<br>Tente novamente com o Firefox ou o Google Chrome.
 	</canvas>
-	
 		
 	<!--<div id='zoom-panel'>
 		<div class="btn-zoom" id ="zoomp" onclick="mapMgr.zoomIn(0.4);mapMgr.drawMap();">
@@ -126,6 +113,9 @@
 			
 				<ul>
 					<li>
+							<button onclick="gameLoop();">Iniciar!</button><br>
+					</li>
+					<li>
 						<button onclick="mapMgr.drawWalls();">Desenhar Paredes</button>
 					</li>
 					<li>
@@ -141,14 +131,13 @@
 						<button onclick="mapMgr.centerIn(1065,750);">Bloco das Coordenações</button>
 						<button onclick="mapMgr.centerIn(760,945);">Casa Velha</button><br>
 						<span>Ir Para:</span><input type='number' id="xcenter"/>, <input type='number' id="ycenter"/><button onclick="mapMgr.centerIn(document.getElementById('xcenter').value, document.getElementById('ycenter').value);">Ir</button>
-						
 					</li>
 				</ul>
 
 				<div>
 					<h2>Modo Criação:</h2>
 					<h3>Paredes:</h3>
-					<div class="TextArea" id="wallOutput" placeholder="Aqui apareceram as coordenadas das paredes desenhadas" style="background-color: white; overflow-y: scroll; height: 140px;"/>
+					<div class="TextArea" id="wallOutput" contenteditable="true" placeholder="Aqui apareceram as coordenadas das paredes desenhadas" style="background-color: white; overflow-y: scroll; height: 140px;"/>
 				</div>
 				
 		</div>

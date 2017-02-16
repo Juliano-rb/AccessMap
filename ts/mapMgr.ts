@@ -22,7 +22,7 @@
 */
 class MapMgr{
 	public character:Character;
-	public wallWidth=3;
+	public wallWidth=2;
 	private wallColor="#60E941";
 	private failColor="red";
 	
@@ -44,10 +44,10 @@ class MapMgr{
 	public height:number;
 	//zoom
 	//Posição base em que os elementos serão desenhados (a imagem de fundo é exatamente nesta posição)
-	public posX=0;
-	public posY=0;
-	//Velocidade de movimentção do mapa
-	private _moveSpeed=4;
+	private _posX=0;
+	private _posY=0;
+	//Velocidade de movimentção do mapa em pixels por segundo
+	private _moveSpeed=15;
 	
 	//Eu passo o contexto do canvas para o proprio mapamgr desenhar nele
 	//Obs: quando uso private,public ou protected antes de um parametro, ele se torna atributo da classe automaticamente
@@ -82,10 +82,10 @@ class MapMgr{
 		this.centerIn(this.spawX, this.spawY);
 	}
 	public update(){
-		console.log("Update em tudo");
+		//console.log("Update em tudo");
 		this.drawMap();
 		this.character.update();
-		this.character.draw();
+		//this.character.draw();
 	}
 	public setMainChar(c:Character){
 		this.character = c;
@@ -111,8 +111,8 @@ class MapMgr{
 		Yw*=config.proportion;
 		//Coordenadas do ponto do mapa que se deseja focar com relação ao canvas, (a coordenada passada via parâmetro deve ser com relação ao mapa, uma media do mapa)
 		//PONTO DE DESTINO
-		var localPx = this.posX + Xw;
-		var localPy = this.posY + Yw;
+		var localPx = this._posX + Xw;
+		var localPy = this._posY + Yw;
 		//console.log("localPx: " + localPx + " localPy: " + localPy);
 		//As distâncias Dx e Dy de PD ate CC
 		var Dx = localPx - cCanvasX;
@@ -120,10 +120,10 @@ class MapMgr{
 		
 		//console.log("Dx: " + Dx + " Dy: " + Dy);
 		//A diferença entre os dois pontos é eliminada subtraindo do ponto final essa diferença
-		this.posX=(this.posX-Dx);
-		this.posY=(this.posY-Dy);
+		this._posX=(this._posX-Dx);
+		this._posY=(this._posY-Dy);
 		
-		//console.log("posX: " + this.posX + " posY: " + this.posY);
+		//console.log("_posX: " + this._posX + " _posY: " + this._posY);
 		this.character.ajustOnScreen();
 		this.update();
 		
@@ -131,9 +131,9 @@ class MapMgr{
 	}
 	public drawBg(){
 		this.ctx.beginPath();
-		this.ctx.rect(this.posX,this.posY,this.width*config.proportion,this.height*config.proportion);
+		this.ctx.rect(this._posX,this._posY,this.width*config.proportion,this.height*config.proportion);
 		this.ctx.stroke();
-		this.ctx.drawImage(this.bgImg,this.posX,this.posY,this.width*config.proportion,this.height*config.proportion);
+		this.ctx.drawImage(this.bgImg,this._posX,this._posY,this.width*config.proportion,this.height*config.proportion);
 	}
 	public showCenter(){
 		var cCanvasX = this.canvas.width/2;
@@ -207,8 +207,8 @@ class MapMgr{
 	}
 	
 	/*public zoomIn(percent:number){
-		var centerMapX = (this.canvas.width/2) - this.posX;
-		var centerMapY = (this.canvas.height/2) - this.posY;
+		var centerMapX = (this.canvas.width/2) - this._posX;
+		var centerMapY = (this.canvas.height/2) - this._posY;
 		console.log("Parte centralizada: x:" + centerMapX + ", y:" + centerMapY);
 		this.proportion+=percent;
 		
@@ -220,8 +220,8 @@ class MapMgr{
 			this.proportion = 0.5;
 		}
 		else{
-			var centerMapX = (this.canvas.width/2) - this.posX;
-			var centerMapY = (this.canvas.height/2) - this.posY;
+			var centerMapX = (this.canvas.width/2) - this._posX;
+			var centerMapY = (this.canvas.height/2) - this._posY;
 			
 			console.log("Parte centralizada: x:" + centerMapX + ", y:" + centerMapY);
 			this.proportion-=percent;
@@ -232,13 +232,13 @@ class MapMgr{
 		
 	}*/
 	public moveRight(px:number){
-		this.posX+=px;
+		this._posX+=px;
 		this.character.updateCoord();
 		
 		var colide = Colision.checkColision(this);
 		console.log("Coliding: " + colide);
 		if(colide){
-			this.posX-=px;
+			this._posX-=px;
 			this.update();
 		}
 		else
@@ -246,42 +246,42 @@ class MapMgr{
 		
 	}
 	public moveLeft(px:number){
-		this.posX-=px;
+		this._posX-=px;
 		this.character.updateCoord();
 		
 		var colide = Colision.checkColision(this);
 		console.log("Coliding: " + colide);
 		//Esta coliding caso este movimento seja feito, então volte
 		if(colide){
-			this.posX+=px;
+			this._posX+=px;
 			this.update();
 		}
 		else
 			this.update();
 	}
 	public moveUp(px:number){
-		this.posY-=px;
+		this._posY-=px;
 		
 		this.character.updateCoord();
 		
 		var colide = Colision.checkColision(this);
 		console.log("Coliding: " + colide);
 		if(colide){
-			this.posY+=px;
+			this._posY+=px;
 			this.update();
 		}
 		else
 			this.update();
 	}
 	public moveDown(px:number){
-		this.posY+=px;
+		this._posY+=px;
 		
 		this.character.updateCoord();
 		
 		var colide = Colision.checkColision(this);
-		console.log("Coliding: " + colide);
+		//console.log("Coliding: " + colide);
 		if(colide){
-			this.posY-=px;
+			this._posY-=px;
 			this.update();
 		}
 		else
@@ -297,16 +297,16 @@ class MapMgr{
 	}*/
 	//Converte ponto no mapa para ponto no canvas
 	private getRelative(coord:[number,number]):[number,number]{
-		var x = (coord[0]*config.proportion)+this.posX;
-		var y = (coord[1]*config.proportion)+this.posY;
+		var x = (coord[0]*config.proportion)+this._posX;
+		var y = (coord[1]*config.proportion)+this._posY;
 		var tuple:[number,number];
 		tuple = [x,y];
 		return tuple;
 	}
 	//Converte ponto no canvas para ponto no mapa
 	public canvasCoordToMap(x:number,y:number):{x:number,y:number}{
-		var mapX = (x- this.posX)/config.proportion;
-		var mapY = (y- this.posY)/config.proportion;
+		var mapX = (x- this._posX)/config.proportion;
+		var mapY = (y- this._posY)/config.proportion;
 
 		var coord ={x:mapX, y:mapY};
 
@@ -327,7 +327,46 @@ class MapMgr{
 	get bg():HTMLImageElement{
 		return this.bgImg;
 	}
-	get moveSpeed(){
-		return this._moveSpeed*config.proportion;
+	get posY():number{
+		return this._posY;
 	}
+	set posY(y:number){
+		var valorAnt = this._posY;
+		this._posY=y;
+		
+		this.character.updateCoord();
+		
+		var colide = Colision.checkColision(this);
+		//console.log("Coliding: " + colide);
+		if(colide){
+			this._posY=valorAnt;
+			this.update();
+		}
+		else
+			this.update();
+	}
+	set posX(x:number){
+		var valorAnt = this._posX;
+		this._posX=x;
+		
+		this.character.updateCoord();
+		
+		var colide = Colision.checkColision(this);
+		//console.log("Coliding: " + colide);
+		if(colide){
+			this._posX=valorAnt;
+			this.update();
+		}
+		else
+			this.update();
+	}
+	get posX():number{
+		return this._posX;
+	}
+	
+	
+	get moveSpeed(){
+		return ((this._moveSpeed * decorrido) / 1000)*config.proportion;
+	}
+	
 }

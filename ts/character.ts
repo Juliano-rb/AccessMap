@@ -9,10 +9,10 @@ class Character{
     //Posição do personagem com relação ao mapa, utilizada para verificar se o personagem está colidindo com algum objeto do mapa
     public x:number;
     public y:number;
-	//O diametro da circuferencia que é a borda de colisão
+	//O raio da circuferencia que é a borda de colisão
 	public size:number;
 
-    constructor(screenPercentX:number, screenPercentY:number, mx:number, my:number, canvas:HTMLCanvasElement){
+    constructor(screenPercentX:number, screenPercentY:number, mx:number, my:number, canvas:HTMLCanvasElement, radius:number){
         this.canvas=canvas;
 		this.ctx=canvas.getContext("2d");
         this.screenPercentX = screenPercentX;
@@ -21,14 +21,14 @@ class Character{
         this.x = mx;
         this.y = my;
 		
-		this.size=2;
+		this.size=radius;
         //Calcula as coordenadas do personagem no canvas
         this.ajustOnScreen();
 		this.update();
     }
     public update(){
         this.updateCoord();
-        console.log("Char: " + this.x + ","+this.y);
+        //console.log("Char: " + this.x + ","+this.y);
 		//this.ajustOnScreen();
         this.draw();
     }
@@ -46,7 +46,7 @@ class Character{
         this.ctx.lineWidth = 1;
         this.ctx.strokeStyle = "gray";
         this.ctx.beginPath();
-		console.log("Desenhando raio: " + this.rsize );
+		//console.log("Desenhando raio: " + this.rsize );
 		this.ctx.arc(this.canvasX,this.canvasY,this.rsize,0,2*Math.PI);
 		
 		this.ctx.fill();

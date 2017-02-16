@@ -1,3 +1,4 @@
 var config = {
-	'proportion':5
+	'proportion':10,
+	'char_radius':1
 }

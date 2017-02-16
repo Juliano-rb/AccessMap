@@ -96,7 +96,7 @@ class Controller{
 	public registerEvents(){
 		window.onresize = this.resizeCanvas;
 				
-		onkeydown = onkeyup = function(evento){
+		/*onkeydown = onkeyup = function(evento){
 			//Como dentro de um evento o escopo é outro (objeto Window) então para acessar a variável keyMap precisa-se referenciar o objeto control, talvez exista uma forma melhor de se fazer isso.
 			var map = control.keyMap;
 			//evento.key contém o nome da tecla i.e: 'ArrowDown'
@@ -161,7 +161,7 @@ class Controller{
 					//mapMgr.update();
 				}
 			}
-		}
+		}*/
 		//);
 	}
 	

@@ -45,8 +45,9 @@ class Creator {
 		
 		if(Creator.countOfCoordinates > 0 && Creator.countOfCoordinates % 2 != 0) {
 			var coord = mapMgr.canvasCoordToMap(x, y);
-			this.x1 = coord.x;
-			this.y1 = coord.y;
+			//Por algum motivo que desconheço o método .toFixed retorna uma String, então é necessário converter o número de volta para number
+			this.x1 = parseInt(coord.x.toFixed(4));
+			this.y1 = parseInt(coord.y.toFixed(4));
 
 			control.addCreatorCoord(this.x0,this.y0, this.x1, this.y1);
 
