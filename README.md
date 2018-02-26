@@ -1,3 +1,6 @@
+# AVISO
+Atualmente, o desenvolvimento desta versão encontra-se pausado, para a versão tri dimensional acesse: http://gui.coletivoeidi.com.br/
+
 # AccessMap
 AccessMap is an application for mapping accessibility failures in public places, this version is directed to the Federal University of Alagoas.
 
